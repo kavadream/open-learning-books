@@ -1,12 +1,32 @@
+import { createPracticeClient } from './practice.js';
+import { createLocalStore } from './local-store.js';
+
 const main = document.querySelector('#main');
-const state = { books: [], view: 'library', unitIndex: 0, messages: [], intro: '', phase: 'practice', feedback: [], busy: false, previewDraft: false };
-const storageKey = 'olb.prototype.v1';
+const state = { books: [], view: 'library', unitIndex: 0, previewDraft: false, capabilities: {} };
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
-let saved = { completed: [], reflection: '', draft: { title: '', audience: '', goal: '', body: '' } };
-try {
-  const stored = JSON.parse(localStorage.getItem(storageKey) || 'null');
-  if (stored && typeof stored === 'object') saved = { completed: Array.isArray(stored.completed) ? stored.completed.filter(x => typeof x === 'string') : [], reflection: typeof stored.reflection === 'string' ? stored.reflection : '', draft: Object.fromEntries(['title', 'audience', 'goal', 'body'].map(key => [key, typeof stored.draft?.[key] === 'string' ? stored.draft[key] : ''])) };
-} catch { /* An unavailable or corrupted local store does not prevent reading. */ }
+// Accessing window.localStorage itself can throw in restricted browser contexts.
+let storage;
+try { storage = window.localStorage; } catch { storage = null; }
+const local = createLocalStore(storage);
+const saved = local.value;
+const clients = new Map();
+function activePractice() {
+  const unit = units()[state.unitIndex];
+  if (!clients.has(unit.id)) {
+    const client = createPracticeClient({ onChange: () => {
+      if (state.view === 'learn' && units()[state.unitIndex]?.id === unit.id) {
+        render();
+        if (!client.state.busy && document.activeElement === document.body) {
+          (document.querySelector('#practice-input') || document.querySelector('[data-action="practice-start"]'))?.focus({ preventScroll: true });
+        }
+      }
+    } });
+    client.selection = { engine: 'demo', mode: unit.practice ? 'role-play' : 'explanation' };
+    clients.set(unit.id, client);
+  }
+  return clients.get(unit.id);
+}
+function stopCurrent() { if (state.books.length) clients.get(units()[state.unitIndex]?.id)?.cancel(false); }
 
 function notify(message) {
   const toast = document.querySelector('#toast');
@@ -15,9 +35,11 @@ function notify(message) {
   setTimeout(() => toast.classList.remove('visible'), 3500);
 }
 function persist() {
-  try { localStorage.setItem(storageKey, JSON.stringify(saved)); return true; }
-  catch { notify('浏览器无法保存，请先导出草稿。'); return false; }
+  const ok = local.save();
+  document.querySelector('#save-status').textContent = local.warning;
+  return ok;
 }
+
 function units() { return state.books[0]?.chapters.flatMap(chapter => chapter.units) || []; }
 function progress() { const list = units(); return list.filter(unit => saved.completed.includes(unit.id)).length; }
 function go(view) { location.hash = view; }
@@ -30,8 +52,23 @@ function library() {
   <section class="invitation"><div><p class="eyebrow">CREATE SOMETHING THAT TEACHES</p><h2>让你的经验，成为别人可以练习的能力。</h2><p>从一个问题、一段内容和一个练习开始。</p></div><button class="secondary" data-view="create">创建作品草稿 ↗</button></section>`;
 }
 
-function conversation() {
-  return `<div class="conversation" aria-live="polite">${state.intro ? `<div class="bubble assistant"><span>演示教练</span><p>${escape(state.intro)}</p></div>` : ''}${state.messages.map(message => `<div class="bubble ${message.role}"><span>${message.role === 'user' ? '你' : '演示教练'}</span><p>${escape(message.content)}</p></div>`).join('')}${state.busy ? '<p class="muted">正在继续演练…</p>' : ''}</div>${state.feedback.length ? `<div class="feedback"><h4>回看这一轮</h4><ul>${state.feedback.map(text => `<li>${escape(text)}</li>`).join('')}</ul><button class="secondary" data-action="practice-start">重新演练</button></div>` : ''}`;
+function conversation(chat) {
+  const label = chat.resultMode === 'real-ai' ? '真实 AI' : '脚本演示';
+  return `<div class="conversation" role="log" aria-label="本轮练习对话" aria-live="polite" tabindex="0">${chat.intro ? `<div class="bubble assistant"><span>${label}</span><p>${escape(chat.intro)}</p></div>` : ''}${chat.messages.map(message => `<div class="bubble ${message.role}"><span>${message.role === 'user' ? '你' : label}</span><p>${escape(message.content)}</p></div>`).join('')}</div>${chat.feedback.length ? `<div class="feedback"><h4>回看这一轮</h4><ul>${chat.feedback.map(text => `<li>${escape(text)}</li>`).join('')}</ul></div>` : ''}`;
+}
+function practicePanel(unit) {
+  const client = activePractice();
+  const chat = client.state;
+  const modes = unit.practice ? ['explanation', 'role-play', 'feedback'] : ['explanation', 'feedback'];
+  const labels = { explanation: '解释', 'role-play': '角色演练', feedback: '依据反馈' };
+  return `<section class="exercise" aria-labelledby="practice-title"><div class="exercise-heading"><div><span class="eyebrow">阅读之后，试着运用</span><h3 id="practice-title">${unit.practice ? '你是经理，角色是仓库主管。' : '解释与回看自己的表达'}</h3></div><span class="pill neutral">${chat.resultMode === 'real-ai' ? '真实 AI 回复' : '脚本演示 / AI 未验证'}</span></div>
+  <div class="practice-options"><div><label for="practice-engine">练习服务</label><select id="practice-engine" ${chat.busy ? 'disabled' : ''}><option value="demo" ${client.selection.engine === 'demo' ? 'selected' : ''}>脚本演示 · 无模型调用</option><option value="ai" ${client.selection.engine === 'ai' ? 'selected' : ''}>真实 AI · ${state.capabilities.externalAiEnabled ? '已配置，待实测' : '服务未配置'}</option></select></div><div><label for="teaching-mode">教学模式</label><select id="teaching-mode" ${chat.busy ? 'disabled' : ''}>${modes.map(mode => `<option value="${mode}" ${client.selection.mode === mode ? 'selected' : ''}>${labels[mode]}</option>`).join('')}</select></div></div>
+  <p class="muted small" id="practice-privacy">${client.selection.engine === 'ai' ? '开始后会将当前小节、教学配置及本轮回应发送给维护者配置的模型服务。请勿输入私人资料。真实调用可能产生服务端费用，尚未计费给读者。' : '脚本使用固定教材与情境，不判断你的回答，不产生模型费用。'} 本轮记录仅临时留在本机服务内存，10 分钟过期；刷新后不恢复。每次最多 2000 字、6 次回应，模型请求最多等待 15 秒。</p>
+  <div class="form-actions"><button class="secondary" data-action="practice-start" ${chat.busy ? 'disabled' : ''}>${chat.intro ? '新建一轮练习' : '开始练习 →'}</button>${chat.sessionId || chat.busy ? '<button class="secondary" data-action="practice-cancel">取消这一轮</button>' : ''}</div>
+  <div id="chat-content">${conversation(chat)}</div><p role="status" aria-live="polite">${chat.busy ? '正在请求，请稍候；可以取消。' : ''}</p>
+  ${chat.error ? `<div class="practice-error" role="alert"><p>${escape(chat.error)}</p>${chat.retryable ? '<button class="secondary" data-action="practice-retry">重试这次回应</button>' : ''}</div>` : ''}
+  ${chat.sessionId && chat.phase === 'practice' ? `<form id="practice-form"><label for="practice-input">你的回应（最多 2000 字）</label><textarea id="practice-input" rows="3" maxlength="2000" aria-describedby="practice-privacy" ${chat.busy ? 'readonly' : ''} placeholder="指出事实、解释和你想了解的信息…">${escape(chat.input)}</textarea><div class="form-actions"><span class="muted small">允许有依据的不同意见。</span><button class="primary" type="submit" ${chat.busy ? 'disabled' : ''}>${chat.uncertain ? '核对上次回应' : '发送回应 ↑'}</button></div></form>` : chat.input ? `<label for="practice-input">保留的回应</label><textarea id="practice-input" rows="3" maxlength="2000">${escape(chat.input)}</textarea>` : ''}
+  ${chat.phase !== 'practice' ? '<p class="muted">这一轮已结束，请换一个情境独立试一次，或新建练习。</p>' : ''}</section>`;
 }
 
 function reader() {
@@ -41,7 +78,7 @@ function reader() {
   const done = saved.completed.includes(unit.id);
   return `<div class="reading-top"><button class="text-button" data-view="library">← 返回书架</button><span class="muted">${escape(book.title)}</span><span class="pill">${progress()}/${list.length} 小节已读</span></div><div class="reader-layout"><aside class="chapter-nav"><p class="eyebrow">CONTENTS</p><h2>为什么有道理的话<br>别人却听不进去</h2><div class="progress-track"><div class="progress-${progress()}"></div></div><p class="muted small">阅读进度记录在此设备</p><div class="unit-list">${list.map((item, index) => `<button class="unit-item ${index === state.unitIndex ? 'selected' : ''}" data-unit="${index}" ${index === state.unitIndex ? 'aria-current="step"' : ''}><span>${saved.completed.includes(item.id) ? '✓' : `0${index + 1}`}</span>${escape(item.title)}</button>`).join('')}</div><div class="learning-goal"><span class="eyebrow">本章练习目标</span><p>分清观察与推测，问清真实顾虑，说明可行的下一步。</p></div></aside><article class="reading-pane"><p class="eyebrow">CHAPTER 07 · SECTION 0${state.unitIndex + 1}</p><h1>${escape(unit.title)}</h1><div class="reading-text">${unit.reading.map(text => `<p>${escape(text)}</p>`).join('')}</div>
   ${unit.quiz ? `<section class="exercise"><span class="eyebrow">停一下，作个判断</span><h3>${escape(unit.quiz.question)}</h3><div class="quiz-options">${unit.quiz.options.map((option, index) => `<button class="quiz-option" data-choice="${index}"><span>${String.fromCharCode(65 + index)}</span>${escape(option)}</button>`).join('')}</div><p id="quiz-feedback" role="status"></p></section>` : ''}
-  ${unit.practice ? `<section class="exercise"><div class="exercise-heading"><div><span class="eyebrow">试着把话说出来</span><h3>你是经理，我来扮演仓库主管。</h3></div><span class="pill neutral">教学脚本演示</span></div><p class="muted small">当前未连接生成式 AI。本轮用固定情境演示三轮交流与自我检查，不产生费用。</p><div id="chat-content">${conversation()}</div>${state.phase !== 'feedback' ? `<form id="practice-form"><label for="practice-input">你的回应</label><textarea id="practice-input" rows="3" maxlength="2000" placeholder="例如：你先带我看一遍，哪个环节最难完成？" ${state.busy ? 'disabled' : ''}></textarea><div class="form-actions"><span class="muted small">先了解，再判断。</span><button class="primary" type="submit" ${state.busy ? 'disabled' : ''}>发送回应 ↑</button></div></form>` : ''}${!state.intro ? '<button class="secondary" data-action="practice-start">进入演练 →</button>' : ''}</section>` : ''}
+  ${practicePanel(unit)}
   ${unit.reflection ? `<section class="exercise"><span class="eyebrow">把方法带走</span><h3>${escape(unit.reflection)}</h3><label for="reflection">写下你的思考</label><textarea id="reflection" rows="5" maxlength="5000" placeholder="你的问题，以及这个问题能帮助你了解什么…">${escape(saved.reflection)}</textarea><button class="secondary" data-action="save-reflection">保存思考</button><p class="muted small">只保存在此设备，不上传给创作者。</p></section>` : ''}
   <div class="reader-bottom"><button class="${done ? 'secondary' : 'primary'}" data-action="complete">${done ? '✓ 已读完这一节' : '记录为已读'}</button>${state.unitIndex < list.length - 1 ? '<button class="text-button" data-action="next">下一小节 →</button>' : '<button class="text-button" data-view="library">回到书架 →</button>'}</div></article></div>`;
 }
@@ -53,37 +90,17 @@ function creator() {
 
 function render() {
   if (!state.books.length) return;
+  const focused = document.activeElement;
+  const id = focused?.id;
+  const selection = typeof focused?.selectionStart === 'number' ? [focused.selectionStart, focused.selectionEnd] : null;
+  const position = window.scrollY;
   document.querySelectorAll('[data-view]').forEach(button => button.removeAttribute('aria-current'));
   document.querySelector(`nav [data-view="${state.view}"]`)?.setAttribute('aria-current', 'page');
   main.innerHTML = state.view === 'learn' ? reader() : state.view === 'create' ? creator() : library();
-}
-
-async function practice(start = false) {
-  const unit = units()[state.unitIndex];
-  if (!unit.practice || state.busy) return;
-  if (start) { state.messages = []; state.intro = ''; state.phase = 'practice'; state.feedback = []; }
-  state.busy = true;
-  const position = window.scrollY;
-  render();
+  document.querySelector('#save-status').textContent = local.warning;
+  const next = (id && document.getElementById(id)) || (focused?.dataset?.action && main.querySelector(`[data-action="${CSS.escape(focused.dataset.action)}"]`));
+  if (next) { next.focus({ preventScroll: true }); if (selection && next.setSelectionRange) next.setSelectionRange(...selection); }
   window.scrollTo(0, position);
-  try {
-    const response = await fetch('/api/practice', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ bookId: state.books[0].id, unitId: unit.id, messages: state.messages }) });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || '暂时无法继续演练');
-    if (start) state.intro = result.reply;
-    else state.messages.push({ role: 'assistant', content: result.reply });
-    state.phase = result.phase;
-    state.feedback = result.feedback || [];
-  } catch (err) {
-    if (!start && state.messages.at(-1)?.role === 'user') state.messages.pop();
-    notify(err.message);
-  } finally {
-    state.busy = false;
-    render();
-    window.scrollTo(0, position);
-    const chat = document.querySelector('.conversation');
-    if (chat) chat.scrollTop = chat.scrollHeight;
-  }
 }
 
 document.addEventListener('click', event => {
@@ -91,7 +108,7 @@ document.addEventListener('click', event => {
   if (!button) return;
   if (button.dataset.view) return go(button.dataset.view);
   if (button.dataset.unit !== undefined) {
-    state.unitIndex = Number(button.dataset.unit); state.messages = []; state.intro = ''; state.phase = 'practice'; state.feedback = []; render(); return;
+    stopCurrent(); state.unitIndex = Number(button.dataset.unit); render(); main.focus(); return;
   }
   if (button.dataset.choice !== undefined) {
     const quiz = units()[state.unitIndex].quiz;
@@ -104,13 +121,20 @@ document.addEventListener('click', event => {
   switch (button.dataset.action) {
     case 'start': {
       const firstUnread = units().findIndex(unit => !saved.completed.includes(unit.id));
-      state.unitIndex = firstUnread < 0 ? 0 : firstUnread; go('learn'); break;
+      stopCurrent(); state.unitIndex = firstUnread < 0 ? 0 : firstUnread; go('learn'); break;
     }
     case 'complete': { const id = units()[state.unitIndex].id; if (!saved.completed.includes(id)) saved.completed.push(id); persist(); render(); break; }
-    case 'next': state.unitIndex = Math.min(state.unitIndex + 1, units().length - 1); state.intro = ''; state.messages = []; state.feedback = []; state.phase = 'practice'; render(); break;
-    case 'practice-start': practice(true); break;
+    case 'next': stopCurrent(); state.unitIndex = Math.min(state.unitIndex + 1, units().length - 1); render(); main.focus(); break;
+    case 'practice-start': activePractice().start({ bookId: state.books[0].id, unitId: units()[state.unitIndex].id, ...activePractice().selection }); break;
+    case 'practice-cancel': activePractice().cancel(); break;
+    case 'practice-retry': activePractice().retry(); break;
     case 'save-reflection': saved.reflection = document.querySelector('#reflection').value; if (persist()) notify('思考已保存在此设备'); break;
-    case 'preview-draft': state.previewDraft = true; render(); document.querySelector('.draft-preview')?.scrollIntoView({ behavior: 'smooth' }); break;
+    case 'preview-draft': {
+      state.previewDraft = true; render();
+      const preview = document.querySelector('.draft-preview');
+      preview?.setAttribute('tabindex', '-1'); preview?.focus({ preventScroll: true });
+      preview?.scrollIntoView({ behavior: 'smooth' }); break;
+    }
     case 'export-draft': {
       const draft = { schemaVersion: 1, status: 'local-draft', language: 'zh-CN', title: saved.draft.title, audience: saved.draft.audience, learningGoals: [saved.draft.goal].filter(Boolean), chapters: [{ id: 'chapter-01', title: '第一章', units: [{ id: 'unit-01', title: '第一个小节', reading: saved.draft.body.split('\n').filter(Boolean) }] }] };
       const url = URL.createObjectURL(new Blob([JSON.stringify(draft, null, 2)], { type: 'application/json' }));
@@ -119,28 +143,35 @@ document.addEventListener('click', event => {
   }
 });
 document.addEventListener('input', event => {
+  if (event.target.id === 'practice-input') activePractice().state.input = event.target.value;
+  if (event.target.id === 'reflection') saved.reflection = event.target.value;
   const key = event.target.dataset.draft;
   if (key && Object.hasOwn(saved.draft, key)) { saved.draft[key] = event.target.value; persist(); }
+});
+document.addEventListener('change', event => {
+  if (['practice-engine', 'teaching-mode'].includes(event.target.id)) {
+    const client = activePractice();
+    client.cancel(false);
+    client.selection[event.target.id === 'practice-engine' ? 'engine' : 'mode'] = event.target.value;
+    render();
+  }
 });
 document.addEventListener('submit', event => {
   if (event.target.id === 'draft-form') { event.preventDefault(); if (persist()) notify('草稿已保存在此设备'); }
   if (event.target.id === 'practice-form') {
     event.preventDefault();
-    if (state.busy) return;
-    const value = document.querySelector('#practice-input').value.trim();
-    if (!value) return notify('先写下你的回应');
-    if (!state.intro) return notify('请先点击“进入演练”');
-    state.messages.push({ role: 'user', content: value }); practice();
+    activePractice().send();
   }
 });
 window.addEventListener('hashchange', () => {
   const view = location.hash.slice(1);
   if (!['library', 'learn', 'create'].includes(view)) return;
-  state.view = view; render(); window.scrollTo(0, 0);
+  stopCurrent(); state.view = view; render(); window.scrollTo(0, 0); main.focus();
 });
 
 try {
-  const response = await fetch('/api/books');
+  const [response, status] = await Promise.all([fetch('/api/books'), fetch('/api/status').then(response => response.json()).catch(() => ({}))]);
+  state.capabilities = status;
   if (!response.ok) throw new Error('书架暂时无法打开');
   state.books = (await response.json()).books;
   if (!state.books?.length) throw new Error('暂时没有可阅读的作品');

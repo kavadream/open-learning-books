@@ -4,7 +4,7 @@
 
 一个开放的互动学习与创作平台。创作者共同设计正文、学习目标、练习、教学 AI 行为与反馈；读者在阅读中提问、尝试、复盘，并将所学带到新的情境。
 
-Project inception: **2026-10-26** · Current version: **0.1.0 prototype**
+Project inception: **2026-10-26** · Current development version: **0.2.0-dev** (draft PR; real-AI pilot pending)
 
 ## Quick start
 
@@ -35,9 +35,11 @@ npm test
 - A three-turn, **explicitly scripted** role-play with reflection prompts.
 - Device-local reading progress and a written reflection.
 - A creator workspace with local draft saving, preview, and JSON export.
-- A small Node HTTP API with request validation and automated tests.
+- A Node HTTP API with request validation, bounded server-owned teaching sessions, cancellation and request replay.
+- Explicit explanation, role-play and feedback modes, with a replaceable server-side Chat Completions adapter that is **off by default and only offline-tested**.
+- Six first-unit evaluation cases with separate development/comparison sets and an unaided transfer task; no learner outcomes collected.
 
-The practice conversation is **not generative AI**. It is a fixed teaching scenario for evaluating the user experience. No external AI is called, no payments are taken, and no real credits are issued. Drafts, reflections, and reading progress remain in the current browser; they do not sync across devices. Submitted role-play turns are processed by the local demo server without durable session storage.
+By default, the practice conversation is **not generative AI**. It is a fixed teaching scenario for evaluating the user experience. No external AI is called, no payments are taken, and no real credits are issued. Drafts, reflections, and reading progress remain in the current browser; they do not sync across devices. Submitted turns are processed by the local server without durable session storage; versioned teaching sessions expire after ten minutes. Real AI is a separate, explicit opt-in requiring a selected supplier/model, project-specific configuration and an authorized bounded pilot. No real model call has been made for this change. See [adapter contract and pilot gate](docs/AI_ADAPTER.md).
 
 ## What we are building toward
 
@@ -47,7 +49,7 @@ The practice conversation is **not generative AI**. It is a fixed teaching scena
 4. Transparent AI usage, internal learning credits, and creator compensation supported by real revenue.
 5. An open community contributing software, teaching designs, scenarios, translations, and evaluations.
 
-Accounts, durable storage, real AI and voice, publishing, payments, and creator payouts are **planned**, not implemented. A tradable token is an undecided, separate proposal; this repository does not issue one.
+Accounts, durable storage, a verified real-AI pilot, voice, publishing, payments, and creator payouts are **planned**, not delivered. A tradable token is an undecided, separate proposal; this repository does not issue one.
 
 ## Start here
 
@@ -61,16 +63,18 @@ Accounts, durable storage, real AI and voice, publishing, payments, and creator 
 - [Research starting points](docs/RESEARCH.md).
 - [Full sample chapter](content/samples/chapter-07.zh-CN.md).
 - [GitHub development tasks](https://github.com/kavadream/open-learning-books/issues) and [founding task scopes](docs/backlog.json).
-- [Contributor guide](CONTRIBUTING.md) and [agent instructions](AGENTS.md).
+- [Contributor guide](CONTRIBUTING.md), [English walkthrough](docs/CONTRIBUTOR_WALKTHROUGH.en.md), and [agent instructions](AGENTS.md).
+- [Evaluation protocol](evals/facts-and-stories/PROTOCOL.md) and [verification record](docs/VERIFICATION.md).
 
 ## Repository layout
 
 ```text
 public/          Responsive UI and browser-local prototype state
-lib/             Content loading and scripted teaching behavior
+lib/            Versioned content, scripted behavior, bounded sessions and provider adapter
 content/         Versioned example books and sample chapter
 docs/            Product, teaching, architecture, and operating decisions
-tests/           HTTP and teaching contract tests
+evals/          Development/comparison cases and evidence-based evaluation protocol
+tests/          HTTP, adapter, session, race/recovery and evaluation contract tests
 .github/         Issue forms, pull request template, and CI
 server.mjs       Local HTTP entry point
 ```

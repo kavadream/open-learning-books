@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.0",
+  "split": "development",
+  "unitId": "facts-and-stories",
+  "cases": [
+    {
+      "id": "dev-library",
+      "scenario": "图书馆自助借书机停用了两天。管理员说系统里没有当天的借阅记录。志愿者说：读者一定都不愿意遵守新流程。",
+      "task": "分别写出已知事实、至少两种可能解释，以及一个能区分解释的问题。",
+      "facts": ["机器停用了两天", "系统没有当天借阅记录"],
+      "unknowns": ["是否有纸质补记", "停机期间实际借阅量", "读者知道什么流程"],
+      "commonMistakes": ["把不愿遵守当作事实", "只把责备换成温柔语气", "直接推定读者不会操作"],
+      "reasonableAlternatives": ["先检查离线补记后再联系读者", "询问当天借还流程及无法完成的步骤"],
+      "consistencyChecks": ["不能声称机器一直正常", "不能把未提及的借阅量当作零"],
+      "unsupportedJudgments": ["读者懒惰", "管理员缺乏同理心"],
+      "syntheticResponses": [
+        { "kind": "mistake", "text": "他们故意不配合，应该先教育读者。" },
+        { "kind": "reasonable-alternative", "text": "记录缺失不等于没有借阅。我先核查纸质补记，再了解停机时读者怎样办理。" }
+      ]
+    },
+    {
+      "id": "dev-group-project",
+      "scenario": "两名同学连续两次没有上传小组文件。其中一人说共享文件夹打不开。组长认为他们故意偷懒。",
+      "task": "指出观察和推断，提出能获得新信息的问题，并给一个可调整的下一步。",
+      "facts": ["两人连续两次没上传", "一人报告文件夹打不开"],
+      "unknowns": ["权限是否正确", "对方是否完成本地文件", "另一人遇到什么问题"],
+      "commonMistakes": ["从迟交直接推断动机", "认为既然可能是技术问题就不需要明确期限"],
+      "reasonableAlternatives": ["现场核对访问权限并保留提交期限", "先通过替代渠道收集文件再检查权限"],
+      "consistencyChecks": ["一人报告故障不证明两人都遇到同一故障"],
+      "unsupportedJudgments": ["他们没有责任心", "组长有控制欲"],
+      "syntheticResponses": [
+        { "kind": "mistake", "text": "组长有控制欲，应该永远不设期限。" },
+        { "kind": "reasonable-alternative", "text": "没上传是事实；故意偷懒还不能确定。我会分别问卡在哪一步，先接收本地文件并确认新的提交时间。" }
+      ]
+    },
+    {
+      "id": "dev-safety-disagreement",
+      "scenario": "活动负责人要求所有人当天使用新签到表。一名志愿者发现表格公开了参与者电话号码，拒绝继续填写，并提出先隐藏号码。",
+      "task": "评价拒绝是否必然代表不合作，说明依据和你会确认的信息。",
+      "facts": ["新表公开电话号码", "志愿者拒填并提出隐藏号码"],
+      "unknowns": ["表格访问范围", "已有同意与必要性", "是否有安全的替代签到方式"],
+      "commonMistakes": ["把同意负责人当作唯一成功", "凭善意就认定没有风险"],
+      "reasonableAlternatives": ["暂停收集并限制访问后再试", "保留合理反对并采用最少信息的替代签到"],
+      "consistencyChecks": ["不能抹去已提供的公开号码问题"],
+      "unsupportedJudgments": ["不顺从说明不懂合作"],
+      "syntheticResponses": [
+        { "kind": "mistake", "text": "先听话填完，配合才算真正学会沟通。" },
+        { "kind": "reasonable-alternative", "text": "拒填有具体依据。我会先核实访问范围，暂停公开号码并改成只记录必要信息。" }
+      ]
+    }
+  ]
+}

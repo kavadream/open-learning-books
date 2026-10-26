@@ -2,6 +2,8 @@
 
 Open Learning Books welcomes software, teaching, content, design, translation, and evaluation contributions.
 
+For a step-by-step reader/creator tour and concrete teaching/code examples, see the [English walkthrough](docs/CONTRIBUTOR_WALKTHROUGH.en.md).
+
 ## First contribution
 
 1. Read README.md and docs/ROADMAP.md.
@@ -20,6 +22,7 @@ Node.js 22+ is sufficient. No API key is needed for the scripted demonstration.
 npm run dev
 npm run check
 npm test
+npm run eval:check
 ```
 
 ## Teaching and content proposals

@@ -21,6 +21,18 @@
 - [M3: Design payments, internal credits and creator settlement](https://github.com/kavadream/open-learning-books/issues/7)
 - [Community: Add an English introduction and contributor walkthrough](https://github.com/kavadream/open-learning-books/issues/8)
 
+## Current development increment (0.2.0-dev, awaiting review)
+
+- [x] #1 foundation: versioned book/teaching configuration, explicit modes, server-owned bounded sessions, opt-in replaceable Chat Completions protocol adapter, failure/cancel/replay contracts and offline tests.
+- [ ] #1 real connection: choose supplier/model, provide authorized project configuration and run a bounded live pilot. No real call has been made; issue remains open.
+- [x] #2 materials: three development cases with mistake/alternative examples, three separated comparison cases including unaided transfer, evidence rubric and consistency/unsupported-judgment review process.
+- [ ] #2 evidence: run a frozen candidate/baseline comparison and actual independent learner tasks with consent. Dataset/tool checks are not learning results; issue remains open.
+- [x] #3 implementation: retry/cancel/reset state recovery, visible save failure without discarding memory, readable long text, labels, focus restoration and responsive controls.
+- [x] #3 browser checks: in-app Chromium at 1440×1000, 768×1024, 390×844 and 320×740; keyboard paths, long text, demo flow and creator draft/save/preview. Browser JSON download remains unverified because its optional approval was not resolved during the test. See verification record for limits.
+- [x] #8 English prototype introduction and contributor walkthrough, including one teaching and one code example; reader remains Chinese-first.
+
+The current increment is a reviewable development branch, not a main release or public application deployment. The existing sample chapter is unchanged; independent book-manuscript work can connect later through versioned content packages. M2–M4 and real billing remain future work.
+
 ## Milestone 1 Real teaching pilot
 
 Build a server-side AI adapter, explicit teaching modes, bounded sessions, and a small evaluation set for the demonstration chapter. Compare response quality and independent transfer with a clear baseline. Confirm the cost of actual use before introducing paid balances.

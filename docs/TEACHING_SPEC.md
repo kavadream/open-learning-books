@@ -25,3 +25,11 @@ For each pilot unit, maintain unfamiliar cases, counterexamples, common mistakes
 ## Current demonstration
 
 The fixed scenario reveals duplicate recording, missing late-shift equipment, and training needs over three turns. Feedback is a checklist for self-review, not an AI judgment of the learner. The mode is returned by the API and shown in the UI.
+
+## 0.2.0-dev contracts and evaluation
+
+The public book package now declares `version`; `content/teaching/human-nature.zh-CN.json` identifies its own version and the matching book version. Configurations define allowed modes, objective, criteria and, for the warehouse scenario, stable facts/role behavior. Only the selected unit's material is sent by the adapter; arbitrary exported creator drafts are not executable configurations.
+
+Explanation, role-play and feedback are explicit validated modes. The default demo uses fixed excerpts/checklists; a configured model reply is labelled `real-ai` only after a successful provider response. Feedback objects require exact learner quotes, comments and next steps. Structural quote checks do not establish semantic fairness. Role-play cannot return coaching feedback objects.
+
+The first-unit [evaluation protocol](../evals/facts-and-stories/PROTOCOL.md) defines six unfamiliar cases, split separation, reasonable disagreement, unsupported-judgment and factual consistency checks, and one unaided transfer task. `npm run eval:check` validates materials and can flag suspect local outputs without a model call. No actual comparison, learner-result collection or learning-effect estimate has been run.
