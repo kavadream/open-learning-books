@@ -28,7 +28,7 @@ Same request ID plus same trimmed message shares a pending call or replays its c
 - Six learner turns, ten distinct attempts and ten-minute expiry per session; expiry timers remove idle sessions too. At most 100 sessions, including cancelled tombstones until expiry; at most two active AI calls.
 - Fifteen-second model deadline, bounded by remaining session lifetime. Client disconnect, explicit cancellation and shutdown abort pending work. Late replies do not enter history or overwrite another UI state.
 - Resource reservations use serialized context bytes + output token cap + 256 units of framing allowance, up to 90,000/session and 300,000/process. These conservative application units are **not a tokenizer count, paid balance, dollar limit or durable financial ledger**. Actual usage remains separately identified. Unknown/failed usage is not silently treated as free. Restarts reset these pilot safeguards; real usage economics and persistent quotas belong to #6.
-- `AI_NOT_CONFIGURED`, `PROVIDER_CONFIG`, `PROVIDER_QUOTA`, `PROVIDER_RATE_LIMIT`, `PROVIDER_UNAVAILABLE`, `INVALID_OUTPUT`, `INVALID_USAGE`, `TIMEOUT`, `CANCELLED`, `SESSION_EXPIRED`, `USAGE_LIMIT`, `SESSION_LIMIT`, `BUSY`, and input errors have Chinese messages. Provider response bodies and low-level connection details are not shown to learners.
+- `AI_NOT_CONFIGURED`, `PROVIDER_CONFIG`, `PROVIDER_QUOTA`, `PROVIDER_RATE_LIMIT`, `PROVIDER_UNAVAILABLE`, `INVALID_OUTPUT`, `INVALID_USAGE`, `TIMEOUT`, `CANCELLED`, `SESSION_EXPIRED`, `USAGE_LIMIT`, `SESSION_LIMIT`, `BUSY`, `SERVER_SHUTDOWN`, and input errors have Chinese messages. Provider response bodies and low-level connection details are not shown to learners.
 
 This is an unauthenticated **local pilot**. Teaching routes require both a loopback remote address and loopback Host, and reject cross-origin writes. Do not expose it through a reverse proxy or treat these checks as production authentication. There is no online publishing, user account, persistent transcript store or payment operation.
 
@@ -41,3 +41,9 @@ Model feedback must quote exact nonempty learner text; unknown quotes, added sco
 ## First authorized live pilot gate
 
 An owner must supply an explicitly selected provider/model snapshot, project-specific credentials, an approved small call/spend limit, and a decision on what test data may be sent and retained. Then use synthetic data first, exercise all three modes and cancellation/error paths, record actual usage, and complete the evaluation protocol. Do not mark issue #1 or the M1 milestone complete based on offline mocks. No live call, credential creation, fee, deployment or learning-effect claim is part of this implementation.
+
+## Shutdown lifecycle
+
+The returned HTTP server's `close(callback)` first marks the service as closing and synchronously closes its teaching session manager, then invokes native HTTP close. In-flight provider signals are aborted before HTTP waits for active connections, and the cancellation responses use `Connection: close` so keep-alive cannot delay completion. The wrapper preserves the native return value and callback/error behavior. CLI `SIGINT`/`SIGTERM` use this same path. Closing is terminal for that application instance; create a fresh server to restart it.
+
+The session manager rejects later creates/turns with `SERVER_SHUTDOWN`, including work whose HTTP body finished parsing after close began. Ordinary `DELETE` cancellation stays scoped to the selected session and leaves concurrent sessions/service availability intact. Real HTTP regression tests cover both paths using offline provider fixtures, including a fixture that ignores the abort signal.

@@ -148,3 +148,68 @@ test('the offline wire fixture integrates through HTTP while legacy demos stay s
   assert.equal(legacy.mode, 'scripted-demo');
   assert.equal(calls, 1);
 });
+
+test('HTTP server.close aborts in-flight teaching before waiting for active connections', { timeout: 3000 }, async t => {
+  const entered = Promise.withResolvers();
+  let providerSignal;
+  const local = await makeServer({ provider: { generate: ({ signal }) => {
+    providerSignal = signal; entered.resolve();
+    return new Promise(() => {}); // Deliberately ignore abort: orchestration must still settle.
+  } }, sessionSettings: { timeoutMs: 60000 } });
+  local.listen(0, '127.0.0.1'); await once(local, 'listening');
+  const requests = [];
+  t.after(async () => {
+    local.closeAllConnections();
+    await new Promise(resolve => local.close(resolve));
+    await Promise.all(requests);
+  });
+  const url = `http://127.0.0.1:${local.address().port}`;
+  const send = (path, body) => fetch(url + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const session = await (await send('/api/teaching/sessions', { bookId: 'human-nature', unitId: 'facts-and-stories', engine: 'ai', mode: 'explanation' })).json();
+  const response = send(`/api/teaching/sessions/${session.sessionId}/turns`, { requestId: 'shutdown-0001', message: '请解释这段教材。' }).then(async response => ({ status: response.status, connection: response.headers.get('connection'), body: await response.json() }), error => ({ error }));
+  requests.push(response);
+  await entered.promise;
+  const closed = new Promise((resolve, reject) => {
+    assert.equal(local.close(error => error ? reject(error) : resolve()), local);
+  });
+  assert.equal(providerSignal.aborted, true, 'close must abort teaching synchronously, before HTTP close waits');
+  const result = await response;
+  assert.equal(result.status, 409);
+  assert.equal(result.connection, 'close');
+  assert.equal(result.body.code, 'CANCELLED');
+  await closed;
+});
+
+test('HTTP cancellation is limited to its session while another teaching request completes', { timeout: 3000 }, async t => {
+  const entered = [Promise.withResolvers(), Promise.withResolvers()];
+  const calls = [];
+  const local = await makeServer({ provider: { generate: ({ signal }) => new Promise(resolve => {
+    const index = calls.length; calls.push({ signal, resolve }); entered[index].resolve();
+  }) } });
+  local.listen(0, '127.0.0.1'); await once(local, 'listening');
+  const requests = [];
+  t.after(async () => {
+    local.closeAllConnections();
+    await new Promise(resolve => local.close(resolve));
+    await Promise.all(requests);
+  });
+  const url = `http://127.0.0.1:${local.address().port}`;
+  const send = (path, body) => fetch(url + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const sessions = [];
+  for (let index = 0; index < 2; index++) {
+    const session = await (await send('/api/teaching/sessions', { bookId: 'human-nature', unitId: 'facts-and-stories', engine: 'ai', mode: 'explanation' })).json();
+    sessions.push(session);
+    requests.push(send(`/api/teaching/sessions/${session.sessionId}/turns`, { requestId: `cancel-isolated-${index}`, message: '请解释这段教材。' }).then(async response => ({ status: response.status, body: await response.json() }), error => ({ error })));
+    await entered[index].promise;
+  }
+  const cancelled = await fetch(`${url}/api/teaching/sessions/${sessions[0].sessionId}`, { method: 'DELETE' });
+  assert.equal(cancelled.status, 200); await cancelled.json();
+  assert.equal(calls[0].signal.aborted, true);
+  assert.equal(calls[1].signal.aborted, false);
+  assert.equal((await requests[0]).body.code, 'CANCELLED');
+  calls[1].resolve({ output: { reply: '第二轮正常完成，这是离线夹具。', feedback: [] }, usage: { inputTokens: 20, outputTokens: 20, totalTokens: 40 }, model: 'offline-fixture' });
+  const second = await requests[1];
+  assert.equal(second.status, 200);
+  assert.match(second.body.reply, /第二轮正常完成/);
+  assert.equal((await fetch(url + '/api/status')).status, 200);
+});

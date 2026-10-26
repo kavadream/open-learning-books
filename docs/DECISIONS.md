@@ -25,3 +25,5 @@ The public repository is https://github.com/kavadream/open-learning-books . Repo
 - No endpoint/model/key defaults; only explicit project-prefixed settings enable the provider. No real call or learning-outcome evaluation was performed. Details and the live pilot gate are in docs/AI_ADAPTER.md.
 - Evaluation development and comparison sets are separate, with a proposed evidence rubric and independent transfer task. Semantic quality, fair feedback, provider cost and learner benefit require actual review/data; tests and text fluency cannot establish them.
 - Resource reservations are bounded local safeguards, not real paid balances or durable usage accounting. No M2/M3 feature is implied by them.
+
+- HTTP shutdown is an explicit abort-before-drain lifecycle; the CLI signal path uses the same close wrapper. Ordinary cancellation remains per session. The session manager closes permanently on shutdown to reject requests finishing body parsing late. Real HTTP regressions cover this distinction.

@@ -127,4 +127,6 @@ test('idle expiry releases capacity and shutdown aborts in-flight work', async (
   const waiting = service.turn(next.sessionId, turn());
   service.close();
   await assert.rejects(waiting, { code: 'CANCELLED' });
+  assert.throws(() => service.create(config), { code: 'SERVER_SHUTDOWN' });
+  await assert.rejects(service.turn(next.sessionId, turn('request-0002')), { code: 'SERVER_SHUTDOWN' });
 });

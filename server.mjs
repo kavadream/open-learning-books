@@ -11,7 +11,7 @@ import { failure } from './lib/errors.mjs';
 const publicDir = resolve(fileURLToPath(new URL('./public/', import.meta.url)));
 const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml' };
 
-function send(res, code, body, type = 'application/json; charset=utf-8') {
+function sendResponse(res, code, body, type = 'application/json; charset=utf-8') {
   if (res.destroyed || res.writableEnded) return;
   res.writeHead(code, {
     'Content-Type': type,
@@ -40,8 +40,15 @@ export async function makeServer({ provider = createProvider(), sessionSettings 
   const books = await loadBooks();
   const teaching = await loadTeaching();
   const sessions = createSessions({ books, teaching, provider, settings: sessionSettings });
+  let closing = false;
+  function send(res, ...args) {
+    // A completed cancellation response must release its HTTP connection too.
+    if (closing && !res.headersSent) res.setHeader('Connection', 'close');
+    return sendResponse(res, ...args);
+  }
   const server = createServer(async (req, res) => {
     try {
+      if (closing) throw failure('SERVER_SHUTDOWN', '服务正在关闭，当前输入请保留，稍后重新打开练习。', 503);
       const url = new URL(req.url, 'http://localhost');
       if (req.method === 'GET' && url.pathname === '/api/status') return send(res, 200, { version: '0.2.0-dev', mode: 'scripted-demo', externalAiEnabled: sessions.configured, realAiVerified: false, paymentsEnabled: false, teachingModes: ['explanation', 'role-play', 'feedback'] });
       if (req.method === 'GET' && url.pathname === '/api/books') return send(res, 200, { books });
@@ -92,6 +99,13 @@ export async function makeServer({ provider = createProvider(), sessionSettings 
   });
   server.requestTimeout = 20000;
   server.headersTimeout = 10000;
+  // 'close' is emitted only after active HTTP connections finish. Abort teaching
+  // BEFORE native close starts draining, otherwise the provider can keep it open.
+  const closeHttp = server.close.bind(server);
+  server.close = (...args) => {
+    if (!closing) { closing = true; sessions.close(); }
+    return closeHttp(...args);
+  };
   server.on('close', () => sessions.close());
   return server;
 }
@@ -103,5 +117,12 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
   const port = Number(option('--port') ?? process.env.PORT ?? 3000);
   const host = option('--host') ?? process.env.HOST ?? '127.0.0.1';
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('PORT must be an integer from 0 to 65535.');
+  const shutdown = () => server.close();
+  process.once('SIGINT', shutdown);
+  process.once('SIGTERM', shutdown);
+  server.once('close', () => {
+    process.off('SIGINT', shutdown);
+    process.off('SIGTERM', shutdown);
+  });
   server.listen(port, host, () => console.log(`Open Learning Books: http://${host}:${server.address().port}\nDefault: scripted demo. AI requires explicit server configuration; no payments.`));
 }
