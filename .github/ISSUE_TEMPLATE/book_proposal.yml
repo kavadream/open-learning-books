@@ -1,0 +1,22 @@
+name: Book or learning-unit proposal
+description: Propose teaching content, an exercise, or a scenario
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: learner
+    attributes:
+      label: Learner, problem, and observable learning goal
+    validations:
+      required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: Content basis, scenario, and proposed exercise
+    validations:
+      required: true
+  - type: textarea
+    id: feedback
+    attributes:
+      label: Feedback criteria and reasonable alternative answers
+    validations:
+      required: true

@@ -1,0 +1,15 @@
+{
+  "name": "open-learning-books",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "An open platform for reading, creating, and practicing with teaching-focused AI books.",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "license": "MIT"
+}
