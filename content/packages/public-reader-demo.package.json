@@ -1,0 +1,471 @@
+{
+  "format": "open-learning-book",
+  "schemaVersion": "1.0.0",
+  "book": {
+    "id": "public-reader-demo",
+    "title": "公开多章节阅读演示",
+    "authors": [
+      {
+        "id": "olb-example",
+        "name": "Open Learning Books 项目示范"
+      }
+    ],
+    "rights": {
+      "holder": "Open Learning Books 项目示范",
+      "licenseId": "LicenseRef-OLB-Example-Only",
+      "statement": "原始示例只用于评估与开发本项目，不随软件 MIT 许可证授权。",
+      "allowedUses": [
+        "本项目评估",
+        "本项目开发"
+      ],
+      "restrictions": [
+        "未授予更广泛再分发与商业使用许可"
+      ],
+      "evidenceRefs": [
+        "content/LICENSE.md"
+      ]
+    },
+    "language": "zh-CN",
+    "version": "0.1.0",
+    "audience": "希望练习区分观察与推测、了解具体顾虑的读者。",
+    "prerequisites": [],
+    "scope": "sample-chapter",
+    "capabilityLevel": "practice",
+    "modalities": [
+      "text"
+    ]
+  },
+  "learningObjectives": [
+    {
+      "id": "goal-1",
+      "description": "区分事实与推测",
+      "observableEvidence": "把案例中的直接观察与动机推测分开列出。"
+    },
+    {
+      "id": "goal-2",
+      "description": "提出能够了解真实顾虑的问题",
+      "observableEvidence": "提出一个能区分不同解释的具体问题。"
+    },
+    {
+      "id": "goal-3",
+      "description": "根据处境调整沟通与行动",
+      "observableEvidence": "说明一个受现实条件约束、可以复核的下一步。"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "reading-1",
+      "order": 10,
+      "title": "先分清事实与解释",
+      "units": [
+        {
+          "id": "facts-and-stories",
+          "order": 10,
+          "title": "先分清事实与解释",
+          "capabilityLevel": "practice",
+          "body": {
+            "format": "markdown",
+            "text": "经理宣布仓库明天开始使用新系统。主管老陈问：以前的方法一直能用，为什么现在一定要换？经理说：别人都能适应，你为什么总有意见？老陈低头说好，三天后系统里仍有不少空白记录。\n\n空白记录是我们知道的事实。老陈故意挑战经理，是一种解释。我们还可以考虑：操作不清楚、工作重复、设备不足，或者方案确实存在问题。\n\n在解释一个人的行为之前，先把观察到的事与推测的动机分开。下一步要寻找能够区分这些解释的信息。"
+          },
+          "objectiveIds": [
+            "goal-1"
+          ],
+          "sourceIds": [
+            "public-sample"
+          ],
+          "mediaIds": []
+        }
+      ]
+    },
+    {
+      "id": "reading-2",
+      "order": 20,
+      "title": "问清楚对方在反对什么",
+      "units": [
+        {
+          "id": "ask-before-judging",
+          "order": 10,
+          "title": "问清楚对方在反对什么",
+          "capabilityLevel": "practice",
+          "body": {
+            "format": "markdown",
+            "text": "经理解释了新系统对公司的价值，但老陈可能关心的是：旧表格能不能停、晚班有没有电脑、谁来训练大家。两个人正在回答不同的问题。\n\n可以从具体情况问起：你带我看一遍，哪个环节最难完成？如果发现同一批货必须录两次，就需要调整工作安排。尊重对方与明确要求可以同时做到。\n\n接下来由你扮演经理，向仓库主管了解真实顾虑。这个演示使用固定教学脚本，帮助体验流程，不会调用外部 AI，也不评定你的真实性格。"
+          },
+          "objectiveIds": [
+            "goal-1",
+            "goal-2",
+            "goal-3"
+          ],
+          "sourceIds": [
+            "public-sample"
+          ],
+          "mediaIds": []
+        }
+      ]
+    },
+    {
+      "id": "reading-3",
+      "order": 30,
+      "title": "换一种关系再试一次",
+      "units": [
+        {
+          "id": "transfer",
+          "order": 10,
+          "title": "换一种关系再试一次",
+          "capabilityLevel": "practice",
+          "body": {
+            "format": "markdown",
+            "text": "朋友劝你辞职，说你一直不开心，早点离开就好了。你解释自己暂时不能走，他却觉得你想得太多。\n\n表面的故事不同，仍然可以检查：建议回答了什么问题？代价由谁承担？哪些信息还没有被了解？除了立即离开与继续忍耐，还可以有哪些安排？\n\n写下一个你愿意向朋友提出的问题，并说明它能帮助你了解什么。在新的情境里独立使用方法，是比记住故事更重要的学习结果。"
+          },
+          "objectiveIds": [
+            "goal-1",
+            "goal-2",
+            "goal-3"
+          ],
+          "sourceIds": [
+            "public-sample"
+          ],
+          "mediaIds": []
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "public-sample",
+      "kind": "original-example",
+      "title": "项目公开第七章示范与原创教学案例",
+      "locator": "content/samples/chapter-07.zh-CN.md",
+      "rightsStatement": "仅用于本项目的评估与开发；更广泛的再分发及商业使用未获授权，见 content/LICENSE.md。"
+    }
+  ],
+  "media": [],
+  "teaching": {
+    "version": "0.1.0",
+    "bookVersion": "0.1.0",
+    "units": [
+      {
+        "unitId": "facts-and-stories",
+        "modes": [
+          "explanation",
+          "feedback"
+        ],
+        "knowledge": {
+          "sourceIds": [
+            "public-sample"
+          ],
+          "scope": "区分已观察的事实与动机解释，提出能区分不同解释的问题。",
+          "limits": [
+            "只根据给出的案例信息作答；推测必须标明为待核实。",
+            "不将礼貌、顺从或角色同意当作掌握。"
+          ]
+        },
+        "promptingStrategy": "先允许尝试；按需要给提示、例子或解释，之后安排不带提示的独立尝试。",
+        "feedback": {
+          "strategy": "引用学习者实际回答中的具体文字，说明依据、遗漏或可调整的下一步；接受有依据的不同意见。",
+          "evidencePolicy": "quote-learner-response",
+          "allowReasonableAlternatives": true,
+          "noPersonalityScores": true
+        },
+        "uncertaintyPolicy": "没有依据时明确说信息不足，说明需要核查什么；不猜测真实性格或动机。",
+        "completionCriteria": [
+          "标出可观察信息",
+          "把解释表述为待检验的假设",
+          "提出可获得新信息的问题",
+          "允许不同但有依据的行动"
+        ],
+        "pausePolicy": "学习者可随时停止；保留本机输入。恢复时由学习者选择重开，本包不要求永久保存对话。"
+      },
+      {
+        "unitId": "ask-before-judging",
+        "modes": [
+          "explanation",
+          "role-play",
+          "feedback"
+        ],
+        "knowledge": {
+          "sourceIds": [
+            "public-sample"
+          ],
+          "scope": "了解执行困难，提出有负责人、行动和检查时间的下一步。",
+          "limits": [
+            "只根据给出的案例信息作答；推测必须标明为待核实。",
+            "不将礼貌、顺从或角色同意当作掌握。"
+          ]
+        },
+        "promptingStrategy": "先允许尝试；按需要给提示、例子或解释，之后安排不带提示的独立尝试。",
+        "feedback": {
+          "strategy": "引用学习者实际回答中的具体文字，说明依据、遗漏或可调整的下一步；接受有依据的不同意见。",
+          "evidencePolicy": "quote-learner-response",
+          "allowReasonableAlternatives": true,
+          "noPersonalityScores": true
+        },
+        "uncertaintyPolicy": "没有依据时明确说信息不足，说明需要核查什么；不猜测真实性格或动机。",
+        "completionCriteria": [
+          "先问具体困难",
+          "回应重复录入、设备和培训",
+          "说明下一步和检查时间",
+          "接受有依据的延期或调整安排"
+        ],
+        "pausePolicy": "学习者可随时停止；保留本机输入。恢复时由学习者选择重开，本包不要求永久保存对话。",
+        "role": {
+          "name": "仓库主管老陈",
+          "learnerRole": "负责推动新系统上线的经理",
+          "stableFacts": [
+            "新系统明天上线",
+            "旧表格仍被要求填写，造成重复录入",
+            "晚班没有电脑",
+            "老陈还需要操作培训"
+          ],
+          "behavior": "先表达顾虑，随问题逐步说明困难；没有解决条件前不因赞美而无条件同意；不要在角色中给出评分或教练式反馈。"
+        }
+      },
+      {
+        "unitId": "transfer",
+        "modes": [
+          "explanation",
+          "feedback"
+        ],
+        "knowledge": {
+          "sourceIds": [
+            "public-sample"
+          ],
+          "scope": "在不同关系与代价条件下独立提出有信息价值的问题。",
+          "limits": [
+            "只根据给出的案例信息作答；推测必须标明为待核实。",
+            "不将礼貌、顺从或角色同意当作掌握。"
+          ]
+        },
+        "promptingStrategy": "先允许尝试；按需要给提示、例子或解释，之后安排不带提示的独立尝试。",
+        "feedback": {
+          "strategy": "引用学习者实际回答中的具体文字，说明依据、遗漏或可调整的下一步；接受有依据的不同意见。",
+          "evidencePolicy": "quote-learner-response",
+          "allowReasonableAlternatives": true,
+          "noPersonalityScores": true
+        },
+        "uncertaintyPolicy": "没有依据时明确说信息不足，说明需要核查什么；不猜测真实性格或动机。",
+        "completionCriteria": [
+          "不替他人猜测动机",
+          "询问现实限制和行动代价",
+          "解释问题将获得什么信息"
+        ],
+        "pausePolicy": "学习者可随时停止；保留本机输入。恢复时由学习者选择重开，本包不要求永久保存对话。"
+      }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "identify-fact",
+      "unitId": "facts-and-stories",
+      "kind": "concept-check",
+      "objectiveIds": [
+        "goal-1"
+      ],
+      "prompt": "根据这段案例，下列哪一句是已经给出的事实？",
+      "criteria": [
+        "指出案例直接提供了空白记录；动机判断仍需新信息。"
+      ],
+      "reasonableAlternatives": [
+        "可以用不同措辞描述已给出的空白记录；没有依据的动机猜测不能作为事实。"
+      ]
+    },
+    {
+      "id": "warehouse-practice",
+      "unitId": "ask-before-judging",
+      "kind": "role-play",
+      "objectiveIds": [
+        "goal-1",
+        "goal-2",
+        "goal-3"
+      ],
+      "prompt": "你是经理，了解仓库主管的顾虑并提出下一步。",
+      "criteria": [
+        "先问具体困难",
+        "回应重复录入、设备和培训",
+        "说明下一步和检查时间",
+        "接受有依据的延期或调整安排"
+      ],
+      "reasonableAlternatives": [
+        "明确条件后试用。",
+        "若设备与流程尚不具备，可以有依据地延期或调整上线安排。"
+      ]
+    },
+    {
+      "id": "friend-transfer",
+      "unitId": "transfer",
+      "kind": "transfer",
+      "objectiveIds": [
+        "goal-1",
+        "goal-2",
+        "goal-3"
+      ],
+      "prompt": "你会提出什么问题？这个问题能帮助你了解什么？",
+      "criteria": [
+        "说明问题可以获得什么新信息，不替朋友或自己猜测动机。"
+      ],
+      "reasonableAlternatives": [
+        "询问经济、工作条件或可尝试的小步骤；有依据地暂缓辞职也合理。"
+      ]
+    }
+  ],
+  "evaluation": {
+    "version": "0.1.0",
+    "cases": [
+      {
+        "id": "dev-library",
+        "unitId": "facts-and-stories",
+        "split": "development",
+        "categories": [
+          "unfamiliar",
+          "misconception"
+        ],
+        "scenario": "图书馆自助借书机停用了两天。管理员说系统里没有当天的借阅记录。志愿者说：读者一定都不愿意遵守新流程。",
+        "task": "分别写出已知事实、至少两种可能解释，以及一个能区分解释的问题。",
+        "checks": [
+          "不能声称机器一直正常",
+          "不能把未提及的借阅量当作零",
+          "把不愿遵守当作事实",
+          "只把责备换成温柔语气",
+          "直接推定读者不会操作",
+          "不得给人格、情商或关系成功打分。"
+        ],
+        "reasonableAlternatives": [
+          "先检查离线补记后再联系读者",
+          "询问当天借还流程及无法完成的步骤"
+        ],
+        "assistance": "allowed"
+      },
+      {
+        "id": "dev-group-project",
+        "unitId": "facts-and-stories",
+        "split": "development",
+        "categories": [
+          "misconception",
+          "counterexample"
+        ],
+        "scenario": "两名同学连续两次没有上传小组文件。其中一人说共享文件夹打不开。组长认为他们故意偷懒。",
+        "task": "指出观察和推断，提出能获得新信息的问题，并给一个可调整的下一步。",
+        "checks": [
+          "一人报告故障不证明两人都遇到同一故障",
+          "从迟交直接推断动机",
+          "认为既然可能是技术问题就不需要明确期限",
+          "不得给人格、情商或关系成功打分。"
+        ],
+        "reasonableAlternatives": [
+          "现场核对访问权限并保留提交期限",
+          "先通过替代渠道收集文件再检查权限"
+        ],
+        "assistance": "allowed"
+      },
+      {
+        "id": "dev-safety-disagreement",
+        "unitId": "facts-and-stories",
+        "split": "development",
+        "categories": [
+          "boundary",
+          "counterexample"
+        ],
+        "scenario": "活动负责人要求所有人当天使用新签到表。一名志愿者发现表格公开了参与者电话号码，拒绝继续填写，并提出先隐藏号码。",
+        "task": "评价拒绝是否必然代表不合作，说明依据和你会确认的信息。",
+        "checks": [
+          "不能抹去已提供的公开号码问题",
+          "把同意负责人当作唯一成功",
+          "凭善意就认定没有风险",
+          "不得给人格、情商或关系成功打分。"
+        ],
+        "reasonableAlternatives": [
+          "暂停收集并限制访问后再试",
+          "保留合理反对并采用最少信息的替代签到"
+        ],
+        "assistance": "allowed"
+      },
+      {
+        "id": "compare-delivery",
+        "unitId": "facts-and-stories",
+        "split": "comparison",
+        "categories": [
+          "unfamiliar",
+          "consistency"
+        ],
+        "scenario": "社区订菜点三天没有更新配送状态。配送员说手机坏了。组织者认为配送员在私下卖货，但没有查到交易或收货记录。",
+        "task": "只根据已提供信息，列出事实、竞争解释和能检验解释的问题。",
+        "checks": [
+          "无交易记录不能改写为已有私卖交易",
+          "把未查到记录当作私卖证据",
+          "相信一句报告就断言解释成立",
+          "不得给人格、情商或关系成功打分。"
+        ],
+        "reasonableAlternatives": [
+          "分别核对收货与设备状况",
+          "询问可验证的配送时间地点，先恢复记录方式"
+        ],
+        "assistance": "allowed"
+      },
+      {
+        "id": "compare-club",
+        "unitId": "facts-and-stories",
+        "split": "comparison",
+        "categories": [
+          "unfamiliar",
+          "counterexample"
+        ],
+        "scenario": "社团改成周六早上排练后，四名成员两周未到。一人提到周末有照护家人的安排。负责人说：真正热爱的人总能抽出时间。",
+        "task": "说明哪些是观察、哪些是解释；设计一个不预设动机的问题，并提出可检验的安排。",
+        "checks": [
+          "不能把照护说成已经证实的借口",
+          "把出席等同于热爱",
+          "把一人的原因推广到所有人",
+          "不得给人格、情商或关系成功打分。"
+        ],
+        "reasonableAlternatives": [
+          "询问每人的时间限制，试行不同时间后复核",
+          "明确必要排练并提供可接受的替代参与方式"
+        ],
+        "assistance": "allowed"
+      },
+      {
+        "id": "compare-independent-transfer",
+        "unitId": "transfer",
+        "split": "comparison",
+        "categories": [
+          "unfamiliar",
+          "independent-transfer"
+        ],
+        "scenario": "邻居上周答应一起维护花园，本周没有参加。他说最近晚上常被噪声吵醒。另一位邻居准备在群里公开批评他不守信用。",
+        "task": "独立写下你会对两位邻居分别说什么，并说明你想获得的信息和下一步。",
+        "checks": [
+          "不得杜撰已确认的疾病、家庭问题或设备不足",
+          "直接诊断性格或心理问题",
+          "把公开羞辱视为必然有效",
+          "套用仓库设备问题",
+          "不得给人格、情商或关系成功打分。"
+        ],
+        "reasonableAlternatives": [
+          "先私下核实困难并谈可行分工",
+          "暂缓公开指责，同时明确后续参与安排与检查时间"
+        ],
+        "assistance": "none"
+      },
+      {
+        "id": "role-boundary",
+        "unitId": "ask-before-judging",
+        "split": "development",
+        "categories": [
+          "boundary",
+          "consistency"
+        ],
+        "scenario": "原创测试情境：经理只赞美老陈并要求马上同意，却没有解决重复录入、晚班设备或培训。",
+        "task": "检查角色是否仍保留执行条件，并区分演练与教练反馈。",
+        "checks": [
+          "不能因受到赞美就抹去三个未解决的条件。",
+          "角色演练时不突然给学习者能力分数或泄露全部教练提示。"
+        ],
+        "reasonableAlternatives": [
+          "保留顾虑并询问下一步。",
+          "在条件明确前暂不承诺上线。"
+        ],
+        "assistance": "allowed"
+      }
+    ]
+  }
+}

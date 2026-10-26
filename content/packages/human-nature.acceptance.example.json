@@ -1,0 +1,47 @@
+{
+  "format": "olb-acceptance-record",
+  "schemaVersion": "1.0.0",
+  "package": {
+    "bookId": "human-nature",
+    "bookVersion": "0.1.0",
+    "manifestSha256": "762fb515825a954cde6ab2ade5b3077b6eebaf0f7ad72301d640a4f35046729f"
+  },
+  "intake": "not-indexed",
+  "layers": {
+    "format": {
+      "status": "not-run",
+      "reviewerId": null,
+      "evidence": [],
+      "findings": []
+    },
+    "contentReview": {
+      "status": "not-run",
+      "reviewerId": null,
+      "evidence": [],
+      "findings": []
+    },
+    "aiTeaching": {
+      "status": "not-run",
+      "reviewerId": null,
+      "evidence": [],
+      "findings": []
+    }
+  },
+  "aiTest": {
+    "runKind": "not-run",
+    "modelSnapshot": null,
+    "teachingVersion": null,
+    "evaluationVersion": null,
+    "callCount": 0,
+    "readerTrial": {
+      "status": "not-run",
+      "independent": false,
+      "evidenceRefs": []
+    }
+  },
+  "learningClaims": [],
+  "publication": {
+    "status": "not-published",
+    "decisionRef": null
+  }
+}

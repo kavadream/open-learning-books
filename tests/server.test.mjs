@@ -213,3 +213,21 @@ test('HTTP cancellation is limited to its session while another teaching request
   assert.match(second.body.reply, /第二轮正常完成/);
   assert.equal((await fetch(url + '/api/status')).status, 200);
 });
+
+test('multi-chapter teaching binds book/chapter/version and public APIs expose no private import route', async () => {
+  const { books } = await (await fetch(origin + '/api/books')).json();
+  const book = books.find(book => book.id === 'public-reader-demo');
+  assert.equal(book.chapters.length, 3); assert.equal(book.acceptance.layers.format, 'passed');
+  assert.equal(book.acceptance.layers.contentReview, 'not-run'); assert.equal(book.acceptance.layers.aiTeaching, 'not-run');
+  assert.ok(books.every(book => book.source !== 'browser-local' && !book.localTeaching));
+  const schemas = await (await fetch(origin + '/api/package-schemas')).json();
+  assert.equal(schemas.book.properties.schemaVersion.const, '1.0.0');
+  const body = { bookId: book.id, bookVersion: book.version, chapterId: 'reading-2', unitId: 'ask-before-judging', mode: 'role-play', engine: 'demo' };
+  for (const wrong of [{ ...body, bookVersion: '9.0.0' }, { ...body, chapterId: 'reading-1' }]) {
+    const response = await post(wrong, '/api/teaching/sessions'); assert.equal(response.status, 409); assert.equal((await response.json()).code, 'CONTENT_MISMATCH');
+  }
+  const session = await (await post(body, '/api/teaching/sessions')).json();
+  const result = await (await post({ requestId: 'multi-chapter-01', message: '' }, `/api/teaching/sessions/${session.sessionId}/turns`)).json();
+  assert.equal(result.bookId, book.id); assert.equal(result.bookVersion, book.version); assert.equal(result.chapterId, 'reading-2'); assert.equal(result.mode, 'scripted-demo');
+  const noUpload = await post({ sample: 'synthetic-only' }, '/api/import'); assert.equal(noUpload.status, 405); await noUpload.json();
+});

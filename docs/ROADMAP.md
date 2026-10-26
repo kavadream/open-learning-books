@@ -33,6 +33,20 @@
 
 The current increment is a reviewable development branch, not a main release or public application deployment. The existing sample chapter is unchanged; independent book-manuscript work can connect later through versioned content packages. M2–M4 and real billing remain future work.
 
+## Approved next increment: package contract and local reading loop (0.3.0-dev)
+
+- [x] One canonical package/teaching/acceptance contract in TEACHING_SPEC.md, protocol 1.0.0, with strict schemas and offline checks.
+- [x] General readable/question-answering/practice levels; role-play and voice remain optional. No book-specific writing style is imposed.
+- [x] Public multi-chapter package loading alongside the unchanged legacy demonstration.
+- [x] Multi-book/version shelf, chapter outline, continuous chapter body, chapter navigation and browser-local progress/reflection recovery.
+- [x] Browser-only private JSON import, validated before atomic save; rejected input/conflicts do not replace books/progress or enter a server upload API.
+- [x] Optional teaching bound to book/chapter/version; public scripts and private browser scripts remain clearly labelled. Three-layer status appears in reader/import reports.
+- [x] Browser verification at 390×844, 320×740 and 1440×1000, including actual close/reopen, with final contract/recovery/error checks recorded in VERIFICATION.md.
+- [ ] Real supplier/model, authorized bounded live calls and independent reader evidence before AI teaching may pass.
+- [ ] Authenticated content/rights review, trusted evidence storage, official intake and version publication. Format validation alone grants none of these.
+
+The first-stage user goal is: open the local preview at phone size → find a book → read completed chapters continuously → optionally ask/practice/self-review → close teaching and continue later. Public internet access, hardware-phone testing and real teaching are separate gates. Private manuscripts remain outside the public repository; fixtures use only existing public/original synthetic examples.
+
 ## Milestone 1 Real teaching pilot
 
 Build a server-side AI adapter, explicit teaching modes, bounded sessions, and a small evaluation set for the demonstration chapter. Compare response quality and independent transfer with a clear baseline. Confirm the cost of actual use before introducing paid balances.

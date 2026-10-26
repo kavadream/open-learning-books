@@ -29,3 +29,13 @@ The prototype runs on a standard Node host or a local machine. GitHub is the sou
 5. Usage accounting, payments, and creator compensation.
 
 The zero-dependency UI is a prototype choice. The production frontend and storage architecture should be chosen from demonstrated needs rather than treated as already settled.
+
+## Versioned packages and private reading (0.3.0-dev)
+
+`schemas/` and TEACHING_SPEC.md define package/acceptance protocol 1.0.0. `public/book-package.js` provides pure offline structural and cross-reference/state consistency checks shared by CLI and browser. It supports only the fixed schemas' documented keyword subset and fails on unsupported schema keywords. `lib/book-package.mjs` adds bounded local file reads and manifest-digest binding without model/network access.
+
+`lib/content.mjs` loads only an explicit public fixture allowlist and retains the legacy sample. `public/reader-model.js` projects packages into the reader, stores local packages/progress under `olb.reader.v1`, and keys records by book/version and stable chapter/unit IDs. Existing creator drafts remain at `olb.prototype.v1`. New local imports validate and persist before replacing state; progress save failures retain current memory with a warning.
+
+The browser fetches only public schema definitions from `/api/package-schemas`. Private file/pasted JSON stays in the browser; no upload route, folder scanning or server log of imported content is introduced. `public/local-teaching.js` is a bounded fixed-script transport for private books and does not invoke fetch. Real private-model access is planned and must not be inferred from public-book server adapters.
+
+Chapter reading is continuous, with optional learning tools opened separately. Server sessions accept explicit content version and chapter binding; legacy callers without those fields remain compatible. UI status derives from actual format checks and labels content/AI as unverified; author-supplied acceptance metadata cannot grant approval. Official registry, authenticated review, evidence storage and publication are not implemented.

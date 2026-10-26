@@ -7,6 +7,7 @@ import { validatePractice, scriptedPractice } from './lib/teaching.mjs';
 import { createProvider } from './lib/provider.mjs';
 import { createSessions } from './lib/sessions.mjs';
 import { failure } from './lib/errors.mjs';
+import { loadPackageSchemas } from './lib/book-package.mjs';
 
 const publicDir = resolve(fileURLToPath(new URL('./public/', import.meta.url)));
 const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml' };
@@ -39,6 +40,7 @@ async function readJson(req) {
 export async function makeServer({ provider = createProvider(), sessionSettings } = {}) {
   const books = await loadBooks();
   const teaching = await loadTeaching();
+  const packageSchemas = await loadPackageSchemas();
   const sessions = createSessions({ books, teaching, provider, settings: sessionSettings });
   let closing = false;
   function send(res, ...args) {
@@ -50,8 +52,9 @@ export async function makeServer({ provider = createProvider(), sessionSettings 
     try {
       if (closing) throw failure('SERVER_SHUTDOWN', '服务正在关闭，当前输入请保留，稍后重新打开练习。', 503);
       const url = new URL(req.url, 'http://localhost');
-      if (req.method === 'GET' && url.pathname === '/api/status') return send(res, 200, { version: '0.2.0-dev', mode: 'scripted-demo', externalAiEnabled: sessions.configured, realAiVerified: false, paymentsEnabled: false, teachingModes: ['explanation', 'role-play', 'feedback'] });
+      if (req.method === 'GET' && url.pathname === '/api/status') return send(res, 200, { version: '0.3.0-dev', mode: 'scripted-demo', externalAiEnabled: sessions.configured, realAiVerified: false, paymentsEnabled: false, teachingModes: ['explanation', 'role-play', 'feedback'] });
       if (req.method === 'GET' && url.pathname === '/api/books') return send(res, 200, { books });
+      if (req.method === 'GET' && url.pathname === '/api/package-schemas') return send(res, 200, packageSchemas);
       if (['POST', 'DELETE'].includes(req.method) && url.pathname.startsWith('/api/')) {
         if ((req.headers.origin && req.headers.origin !== `http://${req.headers.host}`) || req.headers['sec-fetch-site'] === 'cross-site') throw failure('ORIGIN_REJECTED', '请从本服务页面发起请求。', 403);
       }

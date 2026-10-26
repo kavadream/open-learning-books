@@ -1,5 +1,33 @@
 # Verification record
 
+## 0.3.0-dev — 2026-10-26: package contract and local reading loop
+
+Scope: protocol 1.0.0, strict offline validation, public multi-chapter loading and browser-only private reading. No private full manuscript was accessed or copied; fixtures use only the existing public sample and synthetic UI test text. No real AI, payments, account setup or deployment was performed.
+
+### Automated
+
+`npm run check`, `npm run package:check`, `npm run eval:check` and all **49 tests** pass on Node v24.14.1. New coverage includes package levels without compulsory roles/exercises; complete-text/rights/ID/order/reference requirements; unsafe media paths and unknown schemas; separated case coverage; no promotion from format to content/AI; live-plus-reader metadata gates and critical facts/rights/safety blockers; explicit `claimsVerified:false`; public allowlist loading; local import/restore; malformed/oversized/conflicting input atomicity; version-specific progress and explicit position adoption; storage failure and protection of damaged original saves; private teaching with HTTP mocked to throw if called; and server-side book/chapter/version binding. The existing HTTP shutdown/cancellation regressions remain included.
+
+Offline acceptance-record consistency is not authentication or verification of evidence. The example record remains `not-run` for all three layers. The package-check reports only format as passed, with content/AI not run and publication not performed.
+
+### Actual browser flow
+
+Used a hidden supported ChatGPT in-app Chromium preview with `OLB_AI_ENABLED=false`, bound only to 127.0.0.1. Tested the following on the actual running app, not static mockups:
+
+| Viewport | Flow and observation |
+| --- | --- |
+| 390 × 844 | Open public multi-chapter book; full chapter body with teaching closed; mark chapter/read next; refresh restores chapter 2 and completion. Keyboard Enter opens optional tools; Tab/Enter submits a labelled script question. Three role turns end with a self-check quoting the actual synthetic learner response. Close tools/read next/refresh restores chapter 3. Page width equals scroll width (375px excluding scrollbar). |
+| 320 × 740 | Invalid pasted JSON shows format failure and leaves two public cards intact. Valid synthetic private package saves only locally. A literal `<img>` marker renders as text with zero injected reading images. Local feedback quotes the synthetic answer; real private AI option is disabled. Close tools/refresh restores private book chapter 2. Page width equals scroll width (305px excluding scrollbar). |
+| 1440 × 1000 | Import a new synthetic version: starts at chapter 1 with 0/3 completed. Explicitly adopt the older stable-ID position: reaches chapter 2, still 0/3; no completion state copied. Desktop outline and continuous text visually inspected. |
+
+Actually closed this task's preview tab and opened a fresh tab at the same origin: imported version 0.2.0 and chapter 2 were restored. This is same-browser local persistence, not account sync or a guarantee after clearing site data.
+
+Screenshots contain public material/synthetic data only: [390px continuous reading](verification/reader-390.jpg), [320px local imported reading](verification/private-import-320.jpg), [desktop version/position isolation](verification/reader-desktop-1440.jpg). No file-download/upload approval was needed: import verification used the local paste field. The file-picker branch has code-level size/error handling but was not exercised through the browser. Save-denial and corrupt-store failures were tested offline; no browser security setting was changed.
+
+Limitations: simulated viewport sizes, no hardware-phone/Safari/Firefox or full screen-reader audit; plain Markdown text only, no media or voice; actual AI and reader learning trial unrun; trusted review/registry/publishing and cross-device state unimplemented. Browser local storage is neither encrypted nor large-book durable storage. Temporary viewport reset and task preview/server closed after verification. No other apps/tasks were operated.
+
+---
+
 ## 0.2.0-dev — 2026-10-26
 
 Scope: bounded local teaching foundation, offline adapter contracts, evaluation materials and UI recovery. This is a development branch awaiting review. No live model call, production deployment, payment or learner-outcome study was performed.

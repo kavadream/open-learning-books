@@ -1,0 +1,329 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:open-learning-books:acceptance-record:1.0.0",
+  "title": "Open Learning Books acceptance record 1.0.0",
+  "type": "object",
+  "required": [
+    "format",
+    "schemaVersion",
+    "package",
+    "intake",
+    "layers",
+    "aiTest",
+    "learningClaims",
+    "publication"
+  ],
+  "properties": {
+    "format": {
+      "const": "olb-acceptance-record"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "package": {
+      "type": "object",
+      "required": [
+        "bookId",
+        "bookVersion",
+        "manifestSha256"
+      ],
+      "properties": {
+        "bookId": {
+          "$ref": "#/$defs/id"
+        },
+        "bookVersion": {
+          "$ref": "#/$defs/version"
+        },
+        "manifestSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "intake": {
+      "enum": [
+        "not-indexed",
+        "indexed"
+      ]
+    },
+    "layers": {
+      "type": "object",
+      "required": [
+        "format",
+        "contentReview",
+        "aiTeaching"
+      ],
+      "properties": {
+        "format": {
+          "$ref": "#/$defs/layer"
+        },
+        "contentReview": {
+          "$ref": "#/$defs/layer"
+        },
+        "aiTeaching": {
+          "$ref": "#/$defs/layer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "aiTest": {
+      "type": "object",
+      "required": [
+        "runKind",
+        "modelSnapshot",
+        "teachingVersion",
+        "evaluationVersion",
+        "callCount",
+        "readerTrial"
+      ],
+      "properties": {
+        "runKind": {
+          "enum": [
+            "not-run",
+            "offline-fixture",
+            "live"
+          ]
+        },
+        "modelSnapshot": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 20000,
+          "pattern": "\\S"
+        },
+        "teachingVersion": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 20000,
+          "pattern": "\\S"
+        },
+        "evaluationVersion": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 20000,
+          "pattern": "\\S"
+        },
+        "callCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "readerTrial": {
+          "type": "object",
+          "required": [
+            "status",
+            "independent",
+            "evidenceRefs"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "not-run",
+                "completed"
+              ]
+            },
+            "independent": {
+              "type": "boolean"
+            },
+            "evidenceRefs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/text"
+              },
+              "minItems": 0,
+              "maxItems": 100,
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "learningClaims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 0,
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "publication": {
+      "type": "object",
+      "required": [
+        "status",
+        "decisionRef"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not-published",
+            "published",
+            "withdrawn"
+          ]
+        },
+        "decisionRef": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 20000,
+          "pattern": "\\S"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,79}$"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20000,
+      "pattern": "\\S"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[A-Za-z0-9.-]+)?$"
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "reference",
+        "summary"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "validator-run",
+            "content-review",
+            "rights-review",
+            "offline-fixture",
+            "live-ai-run",
+            "independent-reader-trial",
+            "review-decision"
+          ]
+        },
+        "reference": {
+          "$ref": "#/$defs/text"
+        },
+        "summary": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "required": [
+        "id",
+        "severity",
+        "category",
+        "description",
+        "resolved",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "severity": {
+          "enum": [
+            "critical",
+            "major",
+            "minor"
+          ]
+        },
+        "category": {
+          "enum": [
+            "format",
+            "facts",
+            "rights",
+            "safety",
+            "teaching"
+          ]
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "resolved": {
+          "type": "boolean"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "layer": {
+      "type": "object",
+      "required": [
+        "status",
+        "reviewerId",
+        "evidence",
+        "findings"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not-run",
+            "passed",
+            "failed",
+            "not-applicable"
+          ]
+        },
+        "reviewerId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 20000,
+          "pattern": "\\S"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/finding"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

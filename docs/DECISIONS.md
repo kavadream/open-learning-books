@@ -27,3 +27,12 @@ The public repository is https://github.com/kavadream/open-learning-books . Repo
 - Resource reservations are bounded local safeguards, not real paid balances or durable usage accounting. No M2/M3 feature is implied by them.
 
 - HTTP shutdown is an explicit abort-before-drain lifecycle; the CLI signal path uses the same close wrapper. Ordinary cancellation remains per session. The session manager closes permanently on shutdown to reject requests finishing body parsing late. Real HTTP regressions cover this distinction.
+
+## Package and local reading increment (0.3.0-dev)
+
+- TEACHING_SPEC.md is the canonical protocol 1.0.0, extending the existing contract rather than creating a parallel standard. Schema version, book version, teaching version and case-set version are distinct.
+- Reader-only and question-answering books need no role-play. Voice is optional/planned; author style and subject-specific claims are not universal platform rules.
+- Format, content review and actual AI teaching are independent states. Live calls plus independent reader evidence are required for teaching pass; unresolved critical facts/rights/safety findings block downstream pass/publication. Record-format consistency checks never verify the truth of evidence or grant authority.
+- The first implementation uses browser-local private import and book/version progress. No private manuscript is uploaded, logged or copied to Git. No server-side private upload route is added. Media references remain inert, and private teaching is a fixed browser script until an authorized private AI path exists.
+- Legacy demonstration data and the original draft key remain compatible. Same ID/version with different bytes is rejected; new versions start independent records with optional explicit reuse of a stable section position. No completion/reflection is silently copied.
+- Real AI, trusted review/publication, public hosting, accounts, voice, durable conversations and billing remain independent future gates. No new credentials, permission expansion, live calls, fees or deployment are authorized by this implementation.

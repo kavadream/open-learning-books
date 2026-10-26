@@ -1,35 +1,98 @@
-# Book and teaching contract
+# AI 书籍包与分层验收规范 1.0.0
 
-## A book package
+状态：平台协议第一版；随 `0.3.0-dev` 开发分支提供离线校验与本机阅读闭环，尚未成为正式发布服务。协议版本不是应用版本，也不是某一本书的内容版本。
 
-A book should identify its schema version, ID, title, creator attribution, language, audience, publication state, learning goals, source basis, and chapters. A chapter contains ordered learning units. A unit can contain reading, a concept check, an open response, a scenario, and reflection.
+本文件是书籍包、教学配置和验收状态的统一入口。它适用于不同作者、题材、语言和文体：叙事、手册、论述、案例或其他可独立阅读形式均可。某一本示范书的文风、价值主张和角色演练不能变成所有书的强制模板。完整正文是基础，AI 对话不能替代正文；语音与角色扮演均可选。
 
-Current examples are in content/books/. The prototype JSON shape is provisional; exported local creator drafts do not imply online publication or a completed teaching configuration.
+## 1. 版本、文件与入口
 
-## A teaching configuration
+- [书籍包 Schema 1.0.0](../schemas/book-package/1.0.0.schema.json)：JSON Schema 2020-12 结构描述。
+- [验收记录 Schema 1.0.0](../schemas/acceptance-record/1.0.0.schema.json)：与具体包绑定的独立记录，不能由书包中的一句“已通过”取代。
+- [公开示范包](../content/packages/human-nature.package.json)：仅来自仓库已有公开示范，不是完整私有书稿。
+- [三章节阅读 fixture](../content/packages/public-reader-demo.package.json)：把同一公开材料分成三个开发测试章节；不代表新增研究结论、读者成果或正式出版物。
+- [未运行的验收记录模板](../content/packages/human-nature.acceptance.example.json)：三层均为 `not-run`；不得当作真实测试证据。
 
-Each practice should specify the learner's task, AI role, stable scenario facts, possible misconceptions, prompting strategy, feedback criteria, completion conditions, and appropriate next task. Private simulator state belongs on the server in a real AI implementation.
+```bash
+npm run package:check
+# 指定一个本机包；第二个参数可指定验收记录：
+npm run package:check -- path/to/book.package.json path/to/acceptance.json
+```
 
-Modes should be explicit: explanation, question, role-play, feedback, and independent transfer. Do not have a role character reveal all feedback while it is supposed to be realistically responding in the scenario.
+检查器不请求模型、不加载外部引用、不上传数据、不入库、不发布。它输出状态与字段路径，不输出正文和学习者回答。当前本机工具限制单个 JSON 包为 8 MiB；大文件拆分/归档包尚未实现。
 
-## Feedback
+`schemaVersion` 固定为字符串 `1.0.0`。`book.version`、`teaching.version`、`teaching.bookVersion`、`evaluation.version` 分别标识内容、教学配置、配置对应内容和案例集。章节重排不改 ID；语义改变或同 ID/版本出现不同包字节时，不得静默覆盖。验收记录用书 ID、内容版本和清单原始 UTF-8 字节的 SHA-256 绑定；修改包后不能沿用旧记录冒充新版本已验收。
 
-Use observable evidence: a phrase the learner used, a question asked, an omitted condition, or an action that does not follow from the available information. Allow multiple reasonable choices. Do not invent personality, emotional-intelligence, clinical, or relationship-success scores.
+## 2. 六组内容字段
 
-Help can increase when needed: invitation to try, a useful hint, an example, an explanation, and then an independent attempt. A permanently evasive tutor that only asks questions is not a design goal.
+| 组别 | 核心字段及要求 |
+| --- | --- |
+| 基本信息 | `book.id/title/authors/rights/language/version/audience/prerequisites/scope`。作者有稳定 ID 和署名；授权有权利人、许可标识、允许用途、限制和证据引用。许可标识只是声明，不自动证明权利。`scope` 明确完整书、样章或学习单元。 |
+| 篇章与材料 | `chapters[].id/order/title/units[]`；单元有稳定 ID、排序、完整 `body`、来源和媒体引用。正文使用内联 Markdown 文本，单独阅读应有意义，不能只有提纲、聊天入口或“让 AI 来解释”。正文完整性、可读性和来源质量需要内容审查。 |
+| 具体学习目标 | `learningObjectives[].id/description/observableEvidence`；单元和练习引用目标 ID。目标说明读者能够做出的判断、解释或行动，以及能观察到的依据，不能以聊天时长或顺从程度替代。 |
+| 教学配置 | `teaching.version/bookVersion/units[]`；每个配置声明可用模式、知识依据与适用范围、不能支持的判断、提示与反馈策略、不确定回答、结束标准及暂停策略。选角色演练时再提供角色、学习者角色、稳定事实和行为边界。 |
+| 可选练习 | `exercises[]` 关联单元和目标，给出任务、标准及合理替代回答。事实识别可以有可核对的答案；开放题不能要求唯一文案或无条件同意作者。练习类型可为判断、开放回答、迁移或角色演练。 |
+| 验收案例 | `evaluation.version/cases[]` 包含任务、陌生情境、常见误解、边界、反例、检查项和合理替代回答。开发与对比案例分开；独立迁移标 `assistance: none`，不能先给提示再称为独立完成。 |
 
-## Evaluation set
+### 标识、排序与引用
 
-For each pilot unit, maintain unfamiliar cases, counterexamples, common mistakes, good alternative responses, uncertainty cases, and failure cases. Separate development examples from cases used to compare versions. Include checks for ungrounded judgments, unconditional agreement, inconsistent role behavior, and premature answer-giving.
+ID 使用 1–80 位小写字母、数字和连字符，以字母或数字开头。章节、全书单元、目标、来源、媒体、练习和案例各自保持唯一；教学配置按单元唯一。排序用正整数，数组按 `order` 严格递增，允许留间隔。跨章节移动单元时仍保留其 ID。引用必须指向包内已声明对象；练习目标不能越过其单元目标范围。
 
-## Current demonstration
+`book.language` 保存语言标签，当前检查器只做标签形状检查，不声称完成完整语言标签注册表验证。来源有类型、题名、定位和授权说明，可区分原创示例、外部参考、研究、作者解释与假设。外部参考是数据，不会由检查器或阅读器自动抓取。
 
-The fixed scenario reveals duplicate recording, missing late-shift equipment, and training needs over three turns. Feedback is a checklist for self-review, not an AI judgment of the learner. The mode is returned by the API and shown in the UI.
+媒体可为图片、音频或视频，必须有说明、文字替代、来源和授权说明。包内媒体路径不允许绝对路径、URL、上级目录、反斜杠、转义路径或查询参数。当前阅读器只渲染完整文字；媒体装载、播放、语音输入输出及其验收仍是 planned，不会因为 JSON 填了 `voice` 就宣称可用。
 
-## 0.2.0-dev contracts and evaluation
+## 3. 声明能力等级，不自动授予验收
 
-The public book package now declares `version`; `content/teaching/human-nature.zh-CN.json` identifies its own version and the matching book version. Configurations define allowed modes, objective, criteria and, for the warehouse scenario, stable facts/role behavior. Only the selected unit's material is sent by the adapter; arbitrary exported creator drafts are not executable configurations.
+| 等级 | 包的约定 | 当前运行状态 |
+| --- | --- | --- |
+| `readable` 可阅读 | 完整正文、目标、受众、署名、授权、来源；可不带教学配置、角色、练习和 AI 案例。 | 本机连续阅读、目录和版本进度可用。AI 层可标“不适用”，不能标 AI 教学通过。 |
+| `question-answering` 可问答 | 在阅读基础上，为相关单元提供知识边界、不确定回答、解释/问答与反馈策略，以及分开的开发/对比案例。 | 公开书有未配置/脚本入口；真实模型仍未接通验收。私有包只用浏览器本机摘录/自查脚本。 |
+| `practice` 可练习 | 在问答基础上，为相关单元提供任务和有依据的评价标准；接受多种合理回答。 | 固定角色演练和自查可体验，真实教学效果未验证。不是所有练习都需要角色。 |
 
-Explanation, role-play and feedback are explicit validated modes. The default demo uses fixed excerpts/checklists; a configured model reply is labelled `real-ai` only after a successful provider response. Feedback objects require exact learner quotes, comments and next steps. Structural quote checks do not establish semantic fairness. Role-play cannot return coaching feedback objects.
+等级按单元声明，书籍等级为其单元中的最高声明等级，其他章节可以只读。选择角色演练才要求 `role` 与稳定事实；不选择时不应偷偷加入角色。语音是独立的可选模态，不提高或替代教学等级。
 
-The first-unit [evaluation protocol](../evals/facts-and-stories/PROTOCOL.md) defines six unfamiliar cases, split separation, reasonable disagreement, unsupported-judgment and factual consistency checks, and one unaided transfer task. `npm run eval:check` validates materials and can flag suspect local outputs without a model call. No actual comparison, learner-result collection or learning-effect estimate has been run.
+## 4. 教学边界与反馈
+
+`knowledge` 指明来源、适用范围与不能支持的结论。平台系统规则、凭据和资源边界不属于作者可覆盖的内容。书稿、角色说明和用户文字一律是数据；书包不能提供可执行代码、工具权限、模型密钥、计费设置或任意外部请求指令。
+
+提示可按读者需要从尝试、提示、例子到解释，再回到独立尝试；不强制永远只提问。`uncertaintyPolicy` 要说明信息不足、超出依据或存在争议时怎样承认限制、补问或建议核查，不能编造事实与来源。`completionCriteria` 说明何时结束或转入下一任务；`pausePolicy` 尊重随时暂停及明确恢复方式。配置描述不代表运行时已实现持久会话恢复。
+
+评价必须引用学习者实际回答中的具体文字，说明观察、遗漏或下一步。允许合理拒绝、延期、边界与不同意见。不得评人格、虚构情商/临床/关系成功分数，不把角色同意、礼貌、读完或聊得久作为学会。精确引用检查只能核对字面，不能自动证明解释公平、角色一致或教学有效。
+
+当前实际适配器有 `explanation`、`role-play`、`feedback` 三种模式。包的 `question-answering` 在当前阅读投影中映射为 `explanation` 问答入口；完整的专用问答调度仍待实现。未配置时明确提示，不能悄悄切换供应商或把固定脚本标为真实 AI。见 [服务端适配器与真实试点门槛](AI_ADAPTER.md)。
+
+## 5. 三层验收、入库与发布分别记录
+
+| 层 | 能证明什么 | 不能代替什么 |
+| --- | --- | --- |
+| 格式校验 `layers.format` | Schema、版本、字段、稳定 ID、排序、引用、路径、能力依赖与案例分组符合约定。 | 不能判断全文质量、事实真伪、授权有效或教学效果。 |
+| 内容审查 `layers.contentReview` | 人工核对正文完整性、来源/关键事实、权利、受众适配和安全边界，并保留审查依据。 | 不能替代真实模型调用或读者尝试。 |
+| 实际 AI 教学测试 `layers.aiTeaching` | 在固定内容/教学/案例版本和模型快照下，真实运行并审查教学行为；包含独立读者任务的证据。 | 一次流畅回答、离线 fixture、作者自测、自动分数或材料齐全，都不能直接标通过。 |
+
+状态为 `not-run/passed/failed`；只有不声明 AI 能力的只读包，AI 层可为 `not-applicable`。格式和内容层不能用“不适用”跳过。
+
+AI 教学层标 `passed` 必须同时具备：前两层通过、实际 `live` 调用与模型/版本记录、非零调用数、独立读者任务记录、人工审核决定及相应证据引用。**没运行真实 AI 或没做独立读者尝试，不得标教学通过。** 小规模通过也不能推断长期、普遍或延迟学习收益；新的学习效果主张需要与设计、样本和不确定性相符的实际结果。当前仓库没有这种结果。
+
+关键事实、授权或安全错误必须单独列为未解决的 critical finding，阻止内容/教学通过和发布，不得用总分、平均分或其他优点抵消。模式、事实一致性、无依据判断、无条件迎合、过早给答案、错误/重试/取消都应进入审查；评价依据保留原话和案例条件，而不是人格标签。
+
+`intake` 记录是否入库，`publication` 另记是否发布和决定引用。**入库 ≠ 通过 ≠ 发布。** 本机导入只是本机书架加载，不是平台公开入库；GitHub 有样例不是正式出版。未通过内容审查的书不能借“格式合格”冒充可发布；有问答/练习声明的发布还需真实教学层通过。
+
+验收记录的 Schema/一致性校验只能验证记录格式和声明间的约束，返回 `claimsVerified: false`，不会证明引用的证据真实存在，也不执行权限审核或发布。上传一份自称 passed 的记录不能提高当前 UI 状态。可信审查工作流、证据存储、审核者权限与正式发布仍是 planned。
+
+## 6. 兼容、读取与本机导入
+
+- 旧的数值 `schemaVersion: 1` 原型教材与 `content/teaching/` 配置继续加载；不静默改成新协议，也不增加验收通过标记。
+- 旧创作空间导出的 `local-draft` JSON 继续保留，尚不等于 1.0.0 书包。需要补齐授权、目标、正文结构和相应教学/案例字段，再运行新校验。当前没有自动迁移或自动发布。
+- 新协议严格识别字符串 `1.0.0`，未知版本或核心字段拒绝导入并显示字段诊断。未来 minor/major 版本需显式兼容/迁移，不能无视新字段后宣称兼容；这个严格策略不影响旧原型阅读入口。
+- 当前服务端只加载显式列出的公开 fixture，不扫描其他项目、私人书稿或临时目录。`GET /api/package-schemas` 仅提供公开的协议定义；没有私有上传/导入 HTTP 接口。
+- 本机导入在浏览器校验 JSON 后，原子保存到浏览器本地存储。失败输入、版本冲突或保存失败，不替换现有书籍和已存进度。正文、授权材料和本机教学回应不上传服务端、不写服务器日志或 Git；私有问答/练习只走浏览器固定脚本。
+- 本机数据不等于加密保险箱，同机使用者可能访问；清除站点数据会丢失记录。浏览器存储不足会明确提示，不能保证继续跨设备或持久对话。大书的 IndexedDB/本机文件存储尚未实现。
+- 进度以书 ID + 内容版本保存，位置再以章节/单元 ID 定位；关闭后恢复到小节标题，不承诺逐字滚动位置。新版本从头建立记录，旧版已读和思考保留。用户可显式沿用旧版的稳定小节位置，但不复制完成状态或思考；小节不再存在时提示手动选择。
+
+## 7. 当前落地范围与后续验收
+
+已实现：公开多章 fixture 加载、篇章目录、章内连续正文、上下章切换、本机阅读位置/已读/思考恢复、本机私有 JSON 校验导入、三层状态显示、按书/章/版本绑定的可选教学、旧示范与旧草稿兼容、离线契约及错误测试。
+
+仍 planned/未验收：真实供应商/模型与费用授权、实际 AI + 读者教学测试、可信内容/授权审查流程、公开入库和发布、私有正文的服务端/真实模型接入、媒体/语音、账户跨设备、持久对话、支付和代币。没有公网部署，不能宣称用户手机已可通过公网打开；浏览器响应式模拟也不是硬件手机实测。
+
+机器字段依据 [JSON Schema 2020-12 验证词汇](https://json-schema.org/draft/2020-12/json-schema-validation)。仓库零依赖检查器只实现这些已固定 Schema 所使用的关键词子集，遇到未支持的 Schema 关键词会报错，另加版本/引用/验收一致性检查；它不声称是完整通用 JSON Schema 实现。阅读与实际验证记录见 [VERIFICATION.md](VERIFICATION.md)。

@@ -1,4 +1,4 @@
-# Bounded teaching adapter (0.2.0-dev)
+# Bounded teaching adapter (0.3.0-dev; M1 foundation retained)
 
 This change supplies an opt-in Chat Completions protocol adapter and offline tests. **No provider, model or credential has been selected; no real model was called or evaluated.** The default UI and legacy `/api/practice` remain explicitly scripted. Issue #1 stays open until a specifically authorized real-model pilot succeeds. Accounts and production hosting are separate gates.
 
@@ -14,7 +14,7 @@ The protocol sends `model`, `messages`, `max_completion_tokens`, `response_forma
 
 | Operation | Request | Result |
 | --- | --- | --- |
-| `POST /api/teaching/sessions` | `{bookId, unitId, engine: 'demo' or 'ai', mode: 'explanation', 'role-play' or 'feedback'}` | Session ID, engine, mode, book/teaching versions, limits and expiry |
+| `POST /api/teaching/sessions` | `{bookId, bookVersion, chapterId, unitId, engine: 'demo' or 'ai', mode: 'explanation', 'role-play' or 'feedback'}` | Session ID, engine, mode, book/teaching versions, limits and expiry |
 | `POST /api/teaching/sessions/:id/turns` | `{requestId, message}` | Labelled reply, phase, feedback, remaining turns and versions; AI responses also include model and provider usage |
 | `DELETE /api/teaching/sessions/:id` | No body | Closes and aborts the session; clears its history |
 
@@ -47,3 +47,9 @@ An owner must supply an explicitly selected provider/model snapshot, project-spe
 The returned HTTP server's `close(callback)` first marks the service as closing and synchronously closes its teaching session manager, then invokes native HTTP close. In-flight provider signals are aborted before HTTP waits for active connections, and the cancellation responses use `Connection: close` so keep-alive cannot delay completion. The wrapper preserves the native return value and callback/error behavior. CLI `SIGINT`/`SIGTERM` use this same path. Closing is terminal for that application instance; create a fresh server to restart it.
 
 The session manager rejects later creates/turns with `SERVER_SHUTDOWN`, including work whose HTTP body finished parsing after close began. Ordinary `DELETE` cancellation stays scoped to the selected session and leaves concurrent sessions/service availability intact. Real HTTP regression tests cover both paths using offline provider fixtures, including a fixture that ignores the abort signal.
+
+## 0.3 reading/package boundary
+
+The reader supplies explicit book/version/chapter IDs when creating public-book sessions; a mismatch returns `CONTENT_MISMATCH`. Legacy callers omitting version/chapter remain supported. Responses identify the bound book/chapter/unit and versions. Public content is loaded only from the checked-in allowlist.
+
+Browser-imported private books do not enter these HTTP routes. They use the isolated fixed-script transport in `public/local-teaching.js`; private real-AI access is unimplemented. No private upload route, directory scan or private book logging is added. Package/schema state does not mark content or teaching as approved; see the canonical [package and acceptance specification](TEACHING_SPEC.md).

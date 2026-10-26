@@ -22,8 +22,8 @@ Open `http://127.0.0.1:3000`. If the port is in use, run `node server.mjs --port
 ## Walk through the sample
 
 1. Choose **开始体验** (start) or **打开这本书** (open the book). The chapter is **为什么有道理的话别人却听不进去**. The full original sample is [chapter 07](../content/samples/chapter-07.zh-CN.md).
-2. In **先分清事实与解释** (facts and interpretations), choose B: the blank system records are directly given, while the suggested motives are inferences. Read the feedback. **记录为已读** saves reading progress locally, not an ability score.
-3. In **问清楚对方在反对什么** (ask before judging), leave **练习服务** on **脚本演示** and **教学模式** on **角色演练**. Choose **开始练习**. Respond three times. The script reveals duplicate entry, missing late-shift equipment and training needs regardless of the wording you choose. Its final checklist is self-review, not adaptive feedback or a personality rating.
+2. In **先分清事实与解释** (facts and interpretations), open **可选：提问 / 练习** under that section, then choose B: the blank system records are directly given, while the suggested motives are inferences. Read the feedback. **记录为已读** saves reading progress locally, not an ability score.
+3. In **问清楚对方在反对什么** (ask before judging), open that section’s optional tools and leave **练习服务** on **脚本演示** and **教学模式** on **角色演练**. Choose **开始练习**. Respond three times. The script reveals duplicate entry, missing late-shift equipment and training needs regardless of the wording you choose. Its final checklist is self-review, not adaptive feedback or a personality rating.
 4. Try **解释** (explanation) and **依据反馈** (evidence feedback). Their demo outputs are fixed excerpts/prompts. Selecting **真实 AI** and starting with no server configuration shows a clear unconfigured message; it does not silently call another service.
 5. In **换一种关系再试一次** (transfer), write a question about the friend/job scenario and explain what it would help you learn. **保存思考** stores it only in this browser. This is practice, not an evaluated research result.
 
@@ -42,3 +42,9 @@ Propose an invented scenario where a delayed submission could have several expla
 A useful bounded change is to reproduce a request failure and improve recovery without losing the user's draft. Add a failing contract/race test in `tests/client.test.mjs` or `tests/sessions.test.mjs`, fix the relevant state transition, and run the checks above. For layout work, record the browser, viewport, keyboard path, screenshot and any remaining limitations. No external AI key is required for either example.
 
 Read [CONTRIBUTING.md](../CONTRIBUTING.md) and [AGENTS.md](../AGENTS.md), choose one [issue](https://github.com/kavadream/open-learning-books/issues), branch from current main and open a small draft PR with the problem, resulting behavior, evidence and limitations. Keep private data, `.env`, raw research transcripts and runtime exports out of commits. Maintainers review scope and merge readiness; contribution does not imply payment or production access.
+
+## Package and continuous reader increment (0.3.0-dev)
+
+Use the single [package and three-layer acceptance specification](TEACHING_SPEC.md) for new contributions. `npm run package:check` validates the 1.0.0 public examples without calling a model or approving content. Read-only and question-answering books need no role-play. Legacy creator JSON remains a draft requiring migration, not an automatically publishable package.
+
+Open **公开多章节阅读演示** on the shelf to try complete chapter text, **下一章** navigation, optional teaching and local position recovery. Private 1.0.0 packages can be selected or pasted through **本机导入 JSON**; this browser-only path does not upload text and uses fixed local teaching scripts. Different versions keep separate records; explicit position adoption copies no completion/reflection. Review, AI teaching evidence and publishing remain separate unimplemented gates. Do not test with private manuscripts in a public contribution.
