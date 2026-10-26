@@ -2,41 +2,75 @@
   {
     "title": "M1: Implement a bounded, server-side teaching AI adapter",
     "body": "Connect one real model through a server-side adapter for the sample chapter.\n\nAcceptance:\n- [ ] Keys remain server-side.\n- [ ] Book and teaching configuration are versioned.\n- [ ] Explanation, role-play and feedback modes are explicit.\n- [ ] Sessions have bounded input, time and usage.\n- [ ] Errors, cancellation and unconfigured state are clear.\n- [ ] Demonstration and real AI are visibly distinguished.\n\nSee docs/PRD.md and docs/TEACHING_SPEC.md.",
-    "labels": ["enhancement"]
+    "labels": [
+      "enhancement"
+    ],
+    "issue_number": 1,
+    "issue_url": "https://github.com/kavadream/open-learning-books/issues/1"
   },
   {
     "title": "M1: Build an evaluation set for the first learning unit",
     "body": "Create unfamiliar cases and a feedback rubric for distinguishing facts, interpretations and useful questions.\n\nAcceptance:\n- [ ] Include common mistakes and reasonable alternative responses.\n- [ ] Separate development and comparison cases.\n- [ ] Check consistency and unsupported judgments.\n- [ ] Include an independent transfer task.\n- [ ] Report learning results only after a real evaluation.",
-    "labels": ["enhancement"]
+    "labels": [
+      "enhancement"
+    ],
+    "issue_number": 2,
+    "issue_url": "https://github.com/kavadream/open-learning-books/issues/2"
   },
   {
     "title": "M1: Refine the responsive reading and practice experience",
     "body": "Test the actual interface on phone and desktop sizes, including keyboard and assistive labels.\n\nAcceptance:\n- [ ] No clipped reading, navigation or controls.\n- [ ] Long answers remain readable.\n- [ ] Retry and session reset behave consistently.\n- [ ] Local-save failures preserve the current draft.\n- [ ] Record the tested viewports and remaining limitations.",
-    "labels": ["enhancement", "good first issue"]
+    "labels": [
+      "enhancement",
+      "good first issue"
+    ],
+    "issue_number": 3,
+    "issue_url": "https://github.com/kavadream/open-learning-books/issues/3"
   },
   {
     "title": "M2: Add identity and durable user-owned learning records",
     "body": "Design authentication and persistent storage before enabling multi-user publishing.\n\nAcceptance:\n- [ ] Progress and drafts survive another session/device.\n- [ ] Users can access only their own private records.\n- [ ] Creator-facing feedback is intentionally scoped.\n- [ ] Migrate or export browser-local data.\n- [ ] Test unauthorized access and failed saves.",
-    "labels": ["enhancement"]
+    "labels": [
+      "enhancement"
+    ],
+    "issue_number": 4,
+    "issue_url": "https://github.com/kavadream/open-learning-books/issues/4"
   },
   {
     "title": "M2: Create a guided book editor and versioned publishing flow",
     "body": "Help creators describe audience, objectives, reading, practices and feedback without coding prompts.\n\nAcceptance:\n- [ ] Validate the book package.\n- [ ] Support preview and self-testing.\n- [ ] Separate draft, review and published states.\n- [ ] Keep published versions reproducible.\n- [ ] Test with a creator who did not build the platform.",
-    "labels": ["enhancement"]
+    "labels": [
+      "enhancement"
+    ],
+    "issue_number": 5,
+    "issue_url": "https://github.com/kavadream/open-learning-books/issues/5"
   },
   {
     "title": "M3: Meter real usage and validate unit economics",
     "body": "Record actual authoring and learning-service consumption before selling credits.\n\nAcceptance:\n- [ ] Separate authoring, text practice and voice consumption.\n- [ ] Handle retries and failed/cancelled requests.\n- [ ] Show understandable estimates and limits.\n- [ ] Keep measured costs separate from assumptions.\n- [ ] No fabricated cash balance or learning tokens.",
-    "labels": ["enhancement"]
+    "labels": [
+      "enhancement"
+    ],
+    "issue_number": 6,
+    "issue_url": "https://github.com/kavadream/open-learning-books/issues/6"
   },
   {
     "title": "M3: Design payments, internal credits and creator settlement",
     "body": "Implement only after authentication, a durable ledger, and real usage measurements exist.\n\nAcceptance:\n- [ ] Define purchase, reserve, debit, reversal and refund behavior.\n- [ ] Use idempotent financial operations.\n- [ ] Separate content income and service costs.\n- [ ] Document creator payout terms and evidence.\n- [ ] Keep reputation and learning scores separate from spendable balances.\n\nNo tradable-token issuance is included.",
-    "labels": ["enhancement"]
+    "labels": [
+      "enhancement"
+    ],
+    "issue_number": 7,
+    "issue_url": "https://github.com/kavadream/open-learning-books/issues/7"
   },
   {
     "title": "Community: Add an English introduction and contributor walkthrough",
     "body": "Help international software and teaching contributors try the prototype and choose a small task.\n\nAcceptance:\n- [ ] Explain the real current capabilities.\n- [ ] Walk through the sample chapter and creator flow.\n- [ ] Include one teaching and one code contribution example.\n- [ ] Preserve the Chinese-first reader experience.",
-    "labels": ["documentation", "good first issue"]
+    "labels": [
+      "documentation",
+      "good first issue"
+    ],
+    "issue_number": 8,
+    "issue_url": "https://github.com/kavadream/open-learning-books/issues/8"
   }
 ]

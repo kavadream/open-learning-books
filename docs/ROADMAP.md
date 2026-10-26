@@ -7,8 +7,19 @@
 - [x] One demonstration chapter with concept check, scripted practice, and transfer reflection.
 - [x] Contributor documents, issue forms, agent instructions, and CI configuration.
 - [x] Public GitHub repository creation and repository access confirmed.
-- [ ] Initial source upload and remote verification.
-- [ ] File the scoped backlog as GitHub issues after the repository exists.
+- [x] Initial source upload and 35-file remote verification.
+- [x] Eight scoped development tasks created as GitHub Issues #1–#8.
+
+## Initial development issues
+
+- [M1: Implement a bounded, server-side teaching AI adapter](https://github.com/kavadream/open-learning-books/issues/1)
+- [M1: Build an evaluation set for the first learning unit](https://github.com/kavadream/open-learning-books/issues/2)
+- [M1: Refine the responsive reading and practice experience](https://github.com/kavadream/open-learning-books/issues/3)
+- [M2: Add identity and durable user-owned learning records](https://github.com/kavadream/open-learning-books/issues/4)
+- [M2: Create a guided book editor and versioned publishing flow](https://github.com/kavadream/open-learning-books/issues/5)
+- [M3: Meter real usage and validate unit economics](https://github.com/kavadream/open-learning-books/issues/6)
+- [M3: Design payments, internal credits and creator settlement](https://github.com/kavadream/open-learning-books/issues/7)
+- [Community: Add an English introduction and contributor walkthrough](https://github.com/kavadream/open-learning-books/issues/8)
 
 ## Milestone 1 Real teaching pilot
 

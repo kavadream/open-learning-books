@@ -16,4 +16,4 @@ Phone-specific viewport inspection, full accessibility review, real model qualit
 
 ## External delivery
 
-The public GitHub repository kavadream/open-learning-books was created by the owner. Read and write access was confirmed on 2026-10-26 after repository access was updated. Source delivery and task filing are recorded in the repository history, docs/ROADMAP.md, and GitHub Issues. This does not verify an externally deployed production website.
+The public GitHub repository kavadream/open-learning-books was created by the owner. Read and write access was confirmed on 2026-10-26 after repository access was updated. All 35 source files were verified on main at commit 1b5e89745ab7ae19420f454bbce8f45054cbc1ef. Eight initial development issues were created (#1–#8). The [GitHub Actions verification run](https://github.com/kavadream/open-learning-books/actions/runs/40257054620) completed successfully for that application commit. Source delivery and task filing are recorded in docs/ROADMAP.md and GitHub Issues. This does not verify an externally deployed production website.
