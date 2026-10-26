@@ -1,9 +1,11 @@
 import test, { after } from 'node:test';
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
+import { request } from 'node:http';
 import { makeServer } from '../server.mjs';
+import { createProvider } from '../lib/provider.mjs';
 
-const server = await makeServer();
+const server = await makeServer({ provider: null });
 server.listen(0, '127.0.0.1');
 await once(server, 'listening');
 const origin = `http://127.0.0.1:${server.address().port}`;
@@ -74,4 +76,158 @@ test('a completed three-turn interaction returns feedback rather than a fabricat
       assert.equal('score' in result, false);
     }
   }
+});
+
+test('versioned session HTTP flow preserves demo labels and supports explicit cancellation', async () => {
+  const response = await post({ bookId: 'human-nature', unitId: 'ask-before-judging', engine: 'demo', mode: 'role-play' }, '/api/teaching/sessions');
+  assert.equal(response.status, 201);
+  const session = await response.json();
+  const path = `/api/teaching/sessions/${session.sessionId}/turns`;
+  const first = await post({ requestId: 'http-request-1', message: '' }, path);
+  assert.equal(first.status, 200);
+  const body = await first.json();
+  assert.equal(body.mode, 'scripted-demo');
+  assert.equal(body.bookVersion, '0.1.0');
+  const duplicate = await post({ requestId: 'http-request-1', message: '' }, path);
+  assert.deepEqual(await duplicate.json(), body);
+  const cancelled = await fetch(`${origin}/api/teaching/sessions/${session.sessionId}`, { method: 'DELETE' });
+  assert.equal(cancelled.status, 200);
+  await cancelled.json();
+  const gone = await post({ requestId: 'http-request-2', message: '新回应' }, path);
+  assert.equal(gone.status, 410);
+  assert.equal((await gone.json()).code, 'CANCELLED');
+});
+
+test('unconfigured AI, cross-origin posts and oversized JSON fail without invoking a provider', async () => {
+  const data = { bookId: 'human-nature', unitId: 'ask-before-judging', engine: 'ai', mode: 'role-play' };
+  const unconfigured = await post(data, '/api/teaching/sessions');
+  assert.equal(unconfigured.status, 503);
+  assert.equal((await unconfigured.json()).code, 'AI_NOT_CONFIGURED');
+  const cross = await fetch(origin + '/api/teaching/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://untrusted.invalid' }, body: JSON.stringify(data) });
+  assert.equal(cross.status, 403);
+  await cross.json();
+  // Node fetch may replace Host, so use the actual HTTP transport for a rebinding probe.
+  const rebound = await new Promise((resolve, reject) => {
+    const req = request(origin + '/api/teaching/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json', Host: 'untrusted.invalid' } }, response => { response.resume(); resolve(response.statusCode); });
+    req.on('error', reject); req.end(JSON.stringify(data));
+  });
+  assert.equal(rebound, 403);
+  const oversized = await post({ text: 'x'.repeat(17000) }, '/api/teaching/sessions');
+  assert.equal(oversized.status, 413);
+  await oversized.json();
+  for (const path of ['/content/teaching/human-nature.zh-CN.json', '/.env', '/lib/provider.mjs']) {
+    const hidden = await fetch(origin + path);
+    assert.equal(hidden.status, 404);
+    await hidden.json();
+  }
+});
+
+test('the offline wire fixture integrates through HTTP while legacy demos stay scripted', async t => {
+  let calls = 0;
+  const provider = createProvider({ OLB_AI_ENABLED: 'true', OLB_AI_ADAPTER: 'chat-completions', OLB_AI_ENDPOINT: 'https://fixture.invalid/chat/completions', OLB_AI_MODEL: 'offline-fixture', OLB_AI_KEY: 'synthetic-integration-key' }, async (_, options) => {
+    calls++;
+    const request = JSON.parse(options.body);
+    assert.match(request.messages[0].content, /Selected mode: explanation/);
+    return Response.json({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify({ reply: '这是离线协议夹具，不是真实模型验证。', feedback: [] }) } }], usage: { prompt_tokens: 20, completion_tokens: 20, total_tokens: 40 } });
+  });
+  const local = await makeServer({ provider });
+  local.listen(0, '127.0.0.1'); await once(local, 'listening');
+  t.after(async () => { local.closeAllConnections(); await new Promise(resolve => local.close(resolve)); });
+  const url = `http://127.0.0.1:${local.address().port}`;
+  const send = (path, body) => fetch(url + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const status = await (await fetch(url + '/api/status')).json();
+  assert.equal(status.externalAiEnabled, true);
+  assert.equal(status.realAiVerified, false);
+  assert.doesNotMatch(JSON.stringify(status), /synthetic-integration-key/);
+  const session = await (await send('/api/teaching/sessions', { bookId: 'human-nature', unitId: 'facts-and-stories', mode: 'explanation', engine: 'ai' })).json();
+  const result = await (await send(`/api/teaching/sessions/${session.sessionId}/turns`, { requestId: 'integration-0001', message: '请解释事实和推测的区别。' })).json();
+  assert.equal(result.mode, 'real-ai'); // Wire label exercised with a synthetic provider, not a live evaluation.
+  assert.equal(result.usage.totalTokens, 40);
+  assert.equal(calls, 1);
+  const legacy = await (await send('/api/practice', { bookId: 'human-nature', unitId: 'ask-before-judging', messages: [] })).json();
+  assert.equal(legacy.mode, 'scripted-demo');
+  assert.equal(calls, 1);
+});
+
+test('HTTP server.close aborts in-flight teaching before waiting for active connections', { timeout: 3000 }, async t => {
+  const entered = Promise.withResolvers();
+  let providerSignal;
+  const local = await makeServer({ provider: { generate: ({ signal }) => {
+    providerSignal = signal; entered.resolve();
+    return new Promise(() => {}); // Deliberately ignore abort: orchestration must still settle.
+  } }, sessionSettings: { timeoutMs: 60000 } });
+  local.listen(0, '127.0.0.1'); await once(local, 'listening');
+  const requests = [];
+  t.after(async () => {
+    local.closeAllConnections();
+    await new Promise(resolve => local.close(resolve));
+    await Promise.all(requests);
+  });
+  const url = `http://127.0.0.1:${local.address().port}`;
+  const send = (path, body) => fetch(url + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const session = await (await send('/api/teaching/sessions', { bookId: 'human-nature', unitId: 'facts-and-stories', engine: 'ai', mode: 'explanation' })).json();
+  const response = send(`/api/teaching/sessions/${session.sessionId}/turns`, { requestId: 'shutdown-0001', message: '请解释这段教材。' }).then(async response => ({ status: response.status, connection: response.headers.get('connection'), body: await response.json() }), error => ({ error }));
+  requests.push(response);
+  await entered.promise;
+  const closed = new Promise((resolve, reject) => {
+    assert.equal(local.close(error => error ? reject(error) : resolve()), local);
+  });
+  assert.equal(providerSignal.aborted, true, 'close must abort teaching synchronously, before HTTP close waits');
+  const result = await response;
+  assert.equal(result.status, 409);
+  assert.equal(result.connection, 'close');
+  assert.equal(result.body.code, 'CANCELLED');
+  await closed;
+});
+
+test('HTTP cancellation is limited to its session while another teaching request completes', { timeout: 3000 }, async t => {
+  const entered = [Promise.withResolvers(), Promise.withResolvers()];
+  const calls = [];
+  const local = await makeServer({ provider: { generate: ({ signal }) => new Promise(resolve => {
+    const index = calls.length; calls.push({ signal, resolve }); entered[index].resolve();
+  }) } });
+  local.listen(0, '127.0.0.1'); await once(local, 'listening');
+  const requests = [];
+  t.after(async () => {
+    local.closeAllConnections();
+    await new Promise(resolve => local.close(resolve));
+    await Promise.all(requests);
+  });
+  const url = `http://127.0.0.1:${local.address().port}`;
+  const send = (path, body) => fetch(url + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const sessions = [];
+  for (let index = 0; index < 2; index++) {
+    const session = await (await send('/api/teaching/sessions', { bookId: 'human-nature', unitId: 'facts-and-stories', engine: 'ai', mode: 'explanation' })).json();
+    sessions.push(session);
+    requests.push(send(`/api/teaching/sessions/${session.sessionId}/turns`, { requestId: `cancel-isolated-${index}`, message: '请解释这段教材。' }).then(async response => ({ status: response.status, body: await response.json() }), error => ({ error })));
+    await entered[index].promise;
+  }
+  const cancelled = await fetch(`${url}/api/teaching/sessions/${sessions[0].sessionId}`, { method: 'DELETE' });
+  assert.equal(cancelled.status, 200); await cancelled.json();
+  assert.equal(calls[0].signal.aborted, true);
+  assert.equal(calls[1].signal.aborted, false);
+  assert.equal((await requests[0]).body.code, 'CANCELLED');
+  calls[1].resolve({ output: { reply: '第二轮正常完成，这是离线夹具。', feedback: [] }, usage: { inputTokens: 20, outputTokens: 20, totalTokens: 40 }, model: 'offline-fixture' });
+  const second = await requests[1];
+  assert.equal(second.status, 200);
+  assert.match(second.body.reply, /第二轮正常完成/);
+  assert.equal((await fetch(url + '/api/status')).status, 200);
+});
+
+test('multi-chapter teaching binds book/chapter/version and public APIs expose no private import route', async () => {
+  const { books } = await (await fetch(origin + '/api/books')).json();
+  const book = books.find(book => book.id === 'public-reader-demo');
+  assert.equal(book.chapters.length, 3); assert.equal(book.acceptance.layers.format, 'passed');
+  assert.equal(book.acceptance.layers.contentReview, 'not-run'); assert.equal(book.acceptance.layers.aiTeaching, 'not-run');
+  assert.ok(books.every(book => book.source !== 'browser-local' && !book.localTeaching));
+  const schemas = await (await fetch(origin + '/api/package-schemas')).json();
+  assert.equal(schemas.book.properties.schemaVersion.const, '1.0.0');
+  const body = { bookId: book.id, bookVersion: book.version, chapterId: 'reading-2', unitId: 'ask-before-judging', mode: 'role-play', engine: 'demo' };
+  for (const wrong of [{ ...body, bookVersion: '9.0.0' }, { ...body, chapterId: 'reading-1' }]) {
+    const response = await post(wrong, '/api/teaching/sessions'); assert.equal(response.status, 409); assert.equal((await response.json()).code, 'CONTENT_MISMATCH');
+  }
+  const session = await (await post(body, '/api/teaching/sessions')).json();
+  const result = await (await post({ requestId: 'multi-chapter-01', message: '' }, `/api/teaching/sessions/${session.sessionId}/turns`)).json();
+  assert.equal(result.bookId, book.id); assert.equal(result.bookVersion, book.version); assert.equal(result.chapterId, 'reading-2'); assert.equal(result.mode, 'scripted-demo');
+  const noUpload = await post({ sample: 'synthetic-only' }, '/api/import'); assert.equal(noUpload.status, 405); await noUpload.json();
 });
