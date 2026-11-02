@@ -8,11 +8,12 @@ Project inception: **2026-10-26** · Current version: **0.1.0 prototype**
 
 ## 正式书籍目录
 
-| 书籍 | 阅读与下载 |
+| 书籍与版本 | 阅读与下载 |
 | --- | --- |
-| [理解人性：关系、边界与合作](https://github.com/kavadream/understanding-human-relations) · KK 著 | [中文正式版 v1.0.0](https://github.com/kavadream/understanding-human-relations/releases/tag/zh-v1.0.0) · [EPUB](https://github.com/kavadream/understanding-human-relations/releases/download/zh-v1.0.0/understanding-human-relations_zh-CN_v1.0.0.epub) · [PDF](https://github.com/kavadream/understanding-human-relations/releases/download/zh-v1.0.0/understanding-human-relations_zh-CN_v1.0.0.pdf) · [英文版进度](https://github.com/kavadream/understanding-human-relations/blob/main/translations/en/README.md) |
+| [理解人性：关系、边界与合作](https://github.com/kavadream/understanding-human-relations) · KK 著 · 中文正式版 v1.0.0 | [中文版本说明](https://github.com/kavadream/understanding-human-relations/releases/tag/zh-v1.0.0) · [EPUB](https://github.com/kavadream/understanding-human-relations/releases/download/zh-v1.0.0/understanding-human-relations_zh-CN_v1.0.0.epub) · [PDF](https://github.com/kavadream/understanding-human-relations/releases/download/zh-v1.0.0/understanding-human-relations_zh-CN_v1.0.0.pdf) |
+| Understanding Human Nature · English translation preview v0.1.0 | [英文预发布说明](https://github.com/kavadream/understanding-human-relations/releases/tag/en-v0.1.0-preview) · [English EPUB](https://github.com/kavadream/understanding-human-relations/releases/download/en-v0.1.0-preview/English_Understanding_Human_Nature_preview.epub) · [English PDF](https://github.com/kavadream/understanding-human-relations/releases/download/en-v0.1.0-preview/English_Understanding_Human_Nature_preview.pdf) · [完整英文初译](https://github.com/kavadream/understanding-human-relations/blob/main/translations/en/book.md) |
 
-中文版含完整六部17章、来源说明及版权页，免费阅读与完整文件非商业转发按书籍仓库的许可执行。英文预览正在制作，完整英文版尚未发布。作者的母语是中文，欢迎英语母语读者通过书籍仓库的 Issues 或 pull request 协助校正。
+中文版含完整六部17章、来源说明及版权页，仍为正式最新版。英文完整17章初译现以预览版发布，尚未经过人类目标语审阅。作者的母语是中文，欢迎英语母语读者通过书籍仓库的 Issues 或 pull request 协助校正。免费阅读与完整文件非商业转发按书籍仓库的许可执行。
 
 每本书在独立内容仓库维护，其中的中英文共用该书仓库。平台内现有示例仍为下文说明的固定脚本原型。
 
