@@ -17,6 +17,18 @@ Project inception: **2026-10-26** · Current version: **0.1.0 prototype**
 
 每本书在独立内容仓库维护，其中的中英文共用该书仓库。平台内现有示例仍为下文说明的固定脚本原型。
 
+## 创作中／待审草案
+
+以下三书均由KK署名、使用AI辅助撰写，现为完整中文首稿 **draft v0.1，待作者审阅**。各仓英文README仅为项目介绍，尚无对应的完整英文译稿。当前提供Markdown源码与连续阅读稿，未制作这三书的PDF或EPUB。
+
+| 书籍 | 当前草案 | 阅读与反馈 |
+| --- | --- | --- |
+| [把话说清楚：普通人的关键对话](https://github.com/kavadream/clear-conversations) | draft v0.1 · 12章 · 待审 | [完整中文初稿](https://github.com/kavadream/clear-conversations/blob/c1f7ac47378709d23de7333205b08eec3590cbac/dist/reader-manuscript.md) · [目录](https://github.com/kavadream/clear-conversations/blob/c1f7ac47378709d23de7333205b08eec3590cbac/README.md#阅读) · [反馈](https://github.com/kavadream/clear-conversations/issues) |
+| [在不确定中做选择](https://github.com/kavadream/choices-under-uncertainty) | draft v0.1 · 12章 · 待审 | [完整中文初稿](https://github.com/kavadream/choices-under-uncertainty/blob/2bfaef225b2c95057e6b688ab6b8c9af1b4c002e/BOOK.md) · [目录](https://github.com/kavadream/choices-under-uncertainty/blob/2bfaef225b2c95057e6b688ab6b8c9af1b4c002e/README.md#目录) · [反馈](https://github.com/kavadream/choices-under-uncertainty/issues) |
+| [把想做的事做下去](https://github.com/kavadream/follow-through-in-daily-life) | draft v0.1 · 14章 · 待审 | [完整中文初稿](https://github.com/kavadream/follow-through-in-daily-life/blob/f8d14a85124e016d6fc92dcf92d847578c8a4685/BOOK.md) · [目录](https://github.com/kavadream/follow-through-in-daily-life/blob/f8d14a85124e016d6fc92dcf92d847578c8a4685/TOC.md) · [反馈](https://github.com/kavadream/follow-through-in-daily-life/issues) |
+
+读稿链接固定到本次提交，便于按同一版本审阅。各书保留来源与实际读取范围、AI辅助说明和独立版权条款；完整文件的非商业转发依相应书稿许可执行。公开草案不代表作者已验收、专业审定或读者效果已验证。
+
 ## Quick start
 
 Requires Node.js 22 or newer. This prototype has no third-party runtime dependencies.
