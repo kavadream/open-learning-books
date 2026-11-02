@@ -6,6 +6,16 @@
 
 Project inception: **2026-10-26** · Current version: **0.1.0 prototype**
 
+## 正式书籍目录
+
+| 书籍 | 阅读与下载 |
+| --- | --- |
+| [理解人性：关系、边界与合作](https://github.com/kavadream/understanding-human-relations) · KK 著 | [中文正式版 v1.0.0](https://github.com/kavadream/understanding-human-relations/releases/tag/zh-v1.0.0) · [EPUB](https://github.com/kavadream/understanding-human-relations/releases/download/zh-v1.0.0/understanding-human-relations_zh-CN_v1.0.0.epub) · [PDF](https://github.com/kavadream/understanding-human-relations/releases/download/zh-v1.0.0/understanding-human-relations_zh-CN_v1.0.0.pdf) · [英文版进度](https://github.com/kavadream/understanding-human-relations/blob/main/translations/en/README.md) |
+
+中文版含完整六部17章、来源说明及版权页，免费阅读与完整文件非商业转发按书籍仓库的许可执行。英文预览正在制作，完整英文版尚未发布。作者的母语是中文，欢迎英语母语读者通过书籍仓库的 Issues 或 pull request 协助校正。
+
+每本书在独立内容仓库维护，其中的中英文共用该书仓库。平台内现有示例仍为下文说明的固定脚本原型。
+
 ## Quick start
 
 Requires Node.js 22 or newer. This prototype has no third-party runtime dependencies.
