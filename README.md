@@ -19,15 +19,19 @@ Project inception: **2026-10-26** · Current version: **0.1.0 prototype**
 
 ## 创作中／待审草案
 
-以下三书均由KK署名、使用AI辅助撰写，现为完整中文首稿 **draft v0.1，待作者审阅**。各仓英文README仅为项目介绍，尚无对应的完整英文译稿。当前提供Markdown源码与连续阅读稿，未制作这三书的PDF或EPUB。
+以下七书均由KK署名、使用AI辅助撰写，现为完整中文首稿 **draft v0.1，待作者审阅**。英文README或English overview仅为项目介绍，尚无对应的完整英文译稿。当前提供Markdown源码与连续阅读稿，未制作这七书的PDF或EPUB。
 
 | 书籍 | 当前草案 | 阅读与反馈 |
 | --- | --- | --- |
 | [把话说清楚：普通人的关键对话](https://github.com/kavadream/clear-conversations) | draft v0.1 · 12章 · 待审 | [完整中文初稿](https://github.com/kavadream/clear-conversations/blob/c1f7ac47378709d23de7333205b08eec3590cbac/dist/reader-manuscript.md) · [目录](https://github.com/kavadream/clear-conversations/blob/c1f7ac47378709d23de7333205b08eec3590cbac/README.md#阅读) · [反馈](https://github.com/kavadream/clear-conversations/issues) |
 | [在不确定中做选择](https://github.com/kavadream/choices-under-uncertainty) | draft v0.1 · 12章 · 待审 | [完整中文初稿](https://github.com/kavadream/choices-under-uncertainty/blob/2bfaef225b2c95057e6b688ab6b8c9af1b4c002e/BOOK.md) · [目录](https://github.com/kavadream/choices-under-uncertainty/blob/2bfaef225b2c95057e6b688ab6b8c9af1b4c002e/README.md#目录) · [反馈](https://github.com/kavadream/choices-under-uncertainty/issues) |
 | [把想做的事做下去](https://github.com/kavadream/follow-through-in-daily-life) | draft v0.1 · 14章 · 待审 | [完整中文初稿](https://github.com/kavadream/follow-through-in-daily-life/blob/f8d14a85124e016d6fc92dcf92d847578c8a4685/BOOK.md) · [目录](https://github.com/kavadream/follow-through-in-daily-life/blob/f8d14a85124e016d6fc92dcf92d847578c8a4685/TOC.md) · [反馈](https://github.com/kavadream/follow-through-in-daily-life/issues) |
+| [人情与规则：熟人社会里的现代生活](https://github.com/kavadream/social-ties-and-rules) | draft v0.1 · 12章 · 待作者审阅 | [完整中文初稿](https://github.com/kavadream/social-ties-and-rules/blob/294f3e5c9dfcae94701185ac6f2eae4743b69f0d/BOOK.md) · [分章](https://github.com/kavadream/social-ties-and-rules/tree/294f3e5c9dfcae94701185ac6f2eae4743b69f0d/manuscript) · [来源](https://github.com/kavadream/social-ties-and-rules/blob/294f3e5c9dfcae94701185ac6f2eae4743b69f0d/sources/READING-NOTES.md) · [反馈](https://github.com/kavadream/social-ties-and-rules/issues) |
+| [两个人的日常：亲密关系中的协商与修复](https://github.com/kavadream/two-peoples-daily-life) | draft v0.1 · 14章 · 待作者审阅 | [完整中文初稿](https://github.com/kavadream/two-peoples-daily-life/blob/94abee89000587a97b7971877b6653939c20f80a/BOOK.md) · [分章](https://github.com/kavadream/two-peoples-daily-life/tree/94abee89000587a97b7971877b6653939c20f80a/manuscript) · [来源](https://github.com/kavadream/two-peoples-daily-life/blob/94abee89000587a97b7971877b6653939c20f80a/sources/REFERENCES.md) · [反馈](https://github.com/kavadream/two-peoples-daily-life/issues) |
+| [一家人怎样共同成长](https://github.com/kavadream/growing-together-as-family) | draft v0.1 · 13章 · 待作者审阅 | [完整中文初稿](https://github.com/kavadream/growing-together-as-family/blob/e52e44a747f8392295c39f539ddf19fbca4c1b95/BOOK.md) · [分章](https://github.com/kavadream/growing-together-as-family/tree/e52e44a747f8392295c39f539ddf19fbca4c1b95/chapters) · [来源](https://github.com/kavadream/growing-together-as-family/blob/e52e44a747f8392295c39f539ddf19fbca4c1b95/sources/README.md) · [反馈](https://github.com/kavadream/growing-together-as-family/issues) |
+| [不被一种活法困住](https://github.com/kavadream/beyond-one-way-of-life) | draft v0.1 · 14章 · 待作者审阅 | [完整中文初稿](https://github.com/kavadream/beyond-one-way-of-life/blob/e39817045fa91fe07a155b8e4cd57b7ca63842de/BOOK.md) · [分章](https://github.com/kavadream/beyond-one-way-of-life/tree/e39817045fa91fe07a155b8e4cd57b7ca63842de/chapters) · [来源](https://github.com/kavadream/beyond-one-way-of-life/blob/e39817045fa91fe07a155b8e4cd57b7ca63842de/sources/README.md) · [反馈](https://github.com/kavadream/beyond-one-way-of-life/issues) |
 
-读稿链接固定到本次提交，便于按同一版本审阅。各书保留来源与实际读取范围、AI辅助说明和独立版权条款；完整文件的非商业转发依相应书稿许可执行。公开草案不代表作者已验收、专业审定或读者效果已验证。
+读稿链接固定到本次提交，便于按同一版本审阅。各书保留来源与实际读取范围、AI辅助说明和独立版权条款；阅读、下载与转发请遵守各书版权说明，公开阅读不等于开放许可。公开草案不代表作者已验收、专业审定或读者效果已验证。
 
 ## Quick start
 
