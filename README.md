@@ -17,6 +17,15 @@ Project inception: **2026-10-26** · Current version: **0.1.0 prototype**
 
 每本书在独立内容仓库维护，其中的中英文共用该书仓库。平台内现有示例仍为下文说明的固定脚本原型。
 
+### 《理解人性》的正式 AI 学习入口
+
+本书直接与AI开始学习时，应先提供对应章完整正式原文，含作者分析、结论及来源说明；长文可按原顺序分段连续给出，不能把摘要、三单元演示或训练决策切片冒称全章。全文已提供也不代表读者确认读完或理解；用户可暂停、跳过或选择训练。
+
+先读书籍仓库的[阅读与训练指南](https://github.com/kavadream/understanding-human-relations/blob/main/learning/README.md)与[17章完整阅读路由](https://github.com/kavadream/understanding-human-relations/blob/main/learning/reading.json)。已连接KK Zambia Insights试点时使用既有books_get_unit，明确material为chapter；无接口时按路由的固定正式源链接读完整Markdown。随后按用户选择进入[新编训练](https://github.com/kavadream/understanding-human-relations/blob/main/learning/index.json)，训练可以概述原文，练习参考回答按需给出，不假装读者没看过书中分析。
+
+下方What works today中的三单元、固定脚本角色演示属于历史原型，不是《理解人性》正式17章全书，也不是新试点阅读入口。本次仅修正此书入口说明，未替换原型阅读器或扩展其他书。
+
+
 ## 已通过内容验收的书籍
 
 以下七书均由KK署名、使用AI辅助撰写，**内容已获作者验收**，全部可公开浏览；沿用现有 v0.1 版本号。七书均已提供完整的AI辅助英文翻译预览；英文尚未经过人类目标语审阅，待英语母语者校正。作者KK的母语是中文，欢迎英语母语读者通过各书Issues或pull request协助修正。当前提供Markdown源码与连续阅读稿，未制作这七书的PDF或EPUB。
@@ -111,3 +120,4 @@ Learning quality matters more than text volume or chat duration. A book may have
 ## License and content
 
 Software is released under the [MIT License](LICENSE). The `content/` directory has [separate terms](content/LICENSE.md). The repository contains original teaching examples, not full copies of the reference books. Private learner data, credentials, and production records do not belong in this repository.
+
