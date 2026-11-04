@@ -10,10 +10,10 @@ Project inception: **2026-10-26** · Current version: **0.1.0 prototype**
 
 | 书籍与版本 | 阅读与下载 |
 | --- | --- |
-| [理解人性：关系、边界与合作](https://github.com/kavadream/understanding-human-relations) · KK 著 · 中文正式版 v1.0.0 | [中文版本说明](https://github.com/kavadream/understanding-human-relations/releases/tag/zh-v1.0.0) · [EPUB](https://github.com/kavadream/understanding-human-relations/releases/download/zh-v1.0.0/understanding-human-relations_zh-CN_v1.0.0.epub) · [PDF](https://github.com/kavadream/understanding-human-relations/releases/download/zh-v1.0.0/understanding-human-relations_zh-CN_v1.0.0.pdf) |
+| [理解人性：关系、边界与合作](https://github.com/kavadream/understanding-human-relations) · KK 著 · 中文修订版 v1.0.1 | [本版说明](https://github.com/kavadream/understanding-human-relations/blob/e99afdf5d40f551bdb2fa11331e59d652ad61783/RELEASE-NOTES-zh-v1.0.1.md) · [EPUB](https://raw.githubusercontent.com/kavadream/understanding-human-relations/e99afdf5d40f551bdb2fa11331e59d652ad61783/dist/zh-v1.0.1/理解人性_关系边界与合作_读者版.epub) · [PDF](https://raw.githubusercontent.com/kavadream/understanding-human-relations/e99afdf5d40f551bdb2fa11331e59d652ad61783/dist/zh-v1.0.1/理解人性_关系边界与合作_读者版.pdf) · [历史 v1.0.0](https://github.com/kavadream/understanding-human-relations/releases/tag/zh-v1.0.0) |
 | Understanding Human Nature · English translation preview v0.1.0 | [英文预发布说明](https://github.com/kavadream/understanding-human-relations/releases/tag/en-v0.1.0-preview) · [English EPUB](https://github.com/kavadream/understanding-human-relations/releases/download/en-v0.1.0-preview/English_Understanding_Human_Nature_preview.epub) · [English PDF](https://github.com/kavadream/understanding-human-relations/releases/download/en-v0.1.0-preview/English_Understanding_Human_Nature_preview.pdf) · [完整英文初译](https://github.com/kavadream/understanding-human-relations/blob/main/translations/en/book.md) |
 
-中文版含完整六部17章、来源说明及版权页，仍为正式最新版。英文完整17章初译现以预览版发布，尚未经过人类目标语审阅。作者的母语是中文，欢迎英语母语读者通过书籍仓库的 Issues 或 pull request 协助校正。免费阅读与完整文件非商业转发按书籍仓库的许可执行。
+中文版 v1.0.1 含完整六部17章、来源说明及版权页，仅补足必要的虚构场景背景和时间线；旧版保留。英文预览尚未同步本次中文补充。英文完整17章初译现以预览版发布，尚未经过人类目标语审阅。作者的母语是中文，欢迎英语母语读者通过书籍仓库的 Issues 或 pull request 协助校正。免费阅读与完整文件非商业转发按书籍仓库的许可执行。
 
 每本书在独立内容仓库维护，其中的中英文共用该书仓库。平台内现有示例仍为下文说明的固定脚本原型。
 
@@ -21,7 +21,9 @@ Project inception: **2026-10-26** · Current version: **0.1.0 prototype**
 
 本书直接与AI开始学习时，应先提供对应章完整正式原文，含作者分析、结论及来源说明；长文可按原顺序分段连续给出，不能把摘要、三单元演示或训练决策切片冒称全章。全文已提供也不代表读者确认读完或理解；用户可暂停、跳过或选择训练。
 
-先读书籍仓库的[阅读与训练指南](https://github.com/kavadream/understanding-human-relations/blob/main/learning/README.md)与[17章完整阅读路由](https://github.com/kavadream/understanding-human-relations/blob/main/learning/reading.json)。已连接KK Zambia Insights试点时使用既有books_get_unit，明确material为chapter；无接口时按路由的固定正式源链接读完整Markdown。随后按用户选择进入[新编训练](https://github.com/kavadream/understanding-human-relations/blob/main/learning/index.json)，训练可以概述原文，练习参考回答按需给出，不假装读者没看过书中分析。
+正式入口为书籍仓库的[阅读与训练指南](https://github.com/kavadream/understanding-human-relations/blob/main/learning/README.md)。AI直接按用户指定展示章号读取，只有未指定才默认第一章；不先下载第一章、全书索引或原练习。已发现 `books_read_chapter` 时直接用 `{chapter:2,part:1}`，按返回的 next_request 真实续读；`part:"all"` 可取所选章全文一次。客户端未发现新工具时不伪造调用，仍可用既有 `books_get_unit` 指定所选 unit_id 与 `material:"chapter"`。无接口时按[完整源路由](https://github.com/kavadream/understanding-human-relations/blob/main/learning/reading.json)读取完整 Markdown。短块、HTTP或文字完整都不能证明实时语音逐字，口述应另行验收。
+
+完整原文之后由读者选择[新编训练](https://github.com/kavadream/understanding-human-relations/blob/main/learning/index.json)。收到实质回答，AI先具体说明哪些判断有依据及其理由，及时纠正重要推断跳跃；追问须带来新理解，不能每轮机械提问。理由充分可小结并选择应用、[证据回顾](https://github.com/kavadream/understanding-human-relations/blob/main/learning/mastery-recap.json)或结束，不诊断人格或推定现实能力。详见[回应与停止规则](https://github.com/kavadream/understanding-human-relations/blob/main/learning/response-feedback.json)。私人回答和进度只留当前对话，不上传后端。
 
 下方What works today中的三单元、固定脚本角色演示属于历史原型，不是《理解人性》正式17章全书，也不是新试点阅读入口。本次仅修正此书入口说明，未替换原型阅读器或扩展其他书。
 
