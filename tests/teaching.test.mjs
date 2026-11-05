@@ -28,6 +28,7 @@ test('the demonstration discloses its mode and transitions to reflection after t
   const end = scriptedPractice(a);
   assert.equal(end.phase, 'feedback');
   assert.equal(end.feedback.length, 3);
+  assert.ok(end.feedback[0].includes(a[0].content));
   assert.equal('score' in end, false);
 });
 

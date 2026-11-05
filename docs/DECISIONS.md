@@ -6,7 +6,7 @@
 - First language and demonstration: Chinese, with 人性的弱点升级版 as the first reference work.
 - Platform scope: reading, teaching-focused practice, creation, versioned publishing, and sustainable usage.
 - One reusable teaching system with book-specific configuration; no separate base-model training requirement for each book.
-- Initial implementation: zero-dependency Node and browser prototype, explicitly scripted.
+- Implementation: zero-dependency Node and browser prototype; default teaching remains explicitly scripted. The 0.2.0-dev increment adds a replaceable, opt-in Chat Completions protocol adapter, verified only with offline fixtures. This protocol choice does not choose an AI supplier or model.
 - Open collaboration through GitHub. Software and creator content have separate permission statements.
 - Internal learning credits are the first operating concept. No tradable-token issuance is approved or implemented.
 
@@ -17,3 +17,22 @@ Production framework and hosting, AI provider, voice interaction design, identit
 ## Delivery status
 
 The public repository is https://github.com/kavadream/open-learning-books . Repository access was confirmed on 2026-10-26 after the owner enabled access to all repositories. Source delivery and issue filing are tracked in docs/ROADMAP.md and the repository history. Repository publication does not mean a production website has been deployed.
+
+## M1 development boundaries (0.2.0-dev)
+
+- Public book packages and server teaching configurations have independent explicit versions, checked for a matching book version before use. Existing sample prose is unchanged. A separate private manuscript project is outside this platform change and can supply future versioned packages.
+- Teaching routes are local-only until identity and access control are designed. Session memory, expiry, cancellation and duplicate-request handling precede any real-model pilot. Browser drafts/reflections retain the existing local storage key and do not enter model requests.
+- No endpoint/model/key defaults; only explicit project-prefixed settings enable the provider. No real call or learning-outcome evaluation was performed. Details and the live pilot gate are in docs/AI_ADAPTER.md.
+- Evaluation development and comparison sets are separate, with a proposed evidence rubric and independent transfer task. Semantic quality, fair feedback, provider cost and learner benefit require actual review/data; tests and text fluency cannot establish them.
+- Resource reservations are bounded local safeguards, not real paid balances or durable usage accounting. No M2/M3 feature is implied by them.
+
+- HTTP shutdown is an explicit abort-before-drain lifecycle; the CLI signal path uses the same close wrapper. Ordinary cancellation remains per session. The session manager closes permanently on shutdown to reject requests finishing body parsing late. Real HTTP regressions cover this distinction.
+
+## Package and local reading increment (0.3.0-dev)
+
+- TEACHING_SPEC.md is the canonical protocol 1.0.0, extending the existing contract rather than creating a parallel standard. Schema version, book version, teaching version and case-set version are distinct.
+- Reader-only and question-answering books need no role-play. Voice is optional/planned; author style and subject-specific claims are not universal platform rules.
+- Format, content review and actual AI teaching are independent states. Live calls plus independent reader evidence are required for teaching pass; unresolved critical facts/rights/safety findings block downstream pass/publication. Record-format consistency checks never verify the truth of evidence or grant authority.
+- The first implementation uses browser-local private import and book/version progress. No private manuscript is uploaded, logged or copied to Git. No server-side private upload route is added. Media references remain inert, and private teaching is a fixed browser script until an authorized private AI path exists.
+- Legacy demonstration data and the original draft key remain compatible. Same ID/version with different bytes is rejected; new versions start independent records with optional explicit reuse of a stable section position. No completion/reflection is silently copied.
+- Real AI, trusted review/publication, public hosting, accounts, voice, durable conversations and billing remain independent future gates. No new credentials, permission expansion, live calls, fees or deployment are authorized by this implementation.

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.0",
+  "bookId": "human-nature",
+  "bookVersion": "0.1.0",
+  "units": {
+    "facts-and-stories": {
+      "modes": ["explanation", "feedback"],
+      "objective": "区分已观察的事实与动机解释，提出能区分不同解释的问题。",
+      "misconceptions": ["把动机推断当成事实", "把礼貌或同意当成理解", "认为不能推断就不能行动"],
+      "criteria": ["标出可观察信息", "把解释表述为待检验的假设", "提出可获得新信息的问题", "允许不同但有依据的行动"]
+    },
+    "ask-before-judging": {
+      "modes": ["explanation", "role-play", "feedback"],
+      "objective": "了解执行困难，提出有负责人、行动和检查时间的下一步。",
+      "role": "仓库主管老陈",
+      "learnerRole": "负责推动新系统上线的经理",
+      "stableFacts": ["新系统明天上线", "旧表格仍被要求填写，造成重复录入", "晚班没有电脑", "老陈还需要操作培训"],
+      "roleBehavior": "先表达顾虑，随问题逐步说明困难；没有解决条件前不因赞美而无条件同意；不要在角色中给出评分或教练式反馈。",
+      "criteria": ["先问具体困难", "回应重复录入、设备和培训", "说明下一步和检查时间", "接受有依据的延期或调整安排"]
+    },
+    "transfer": {
+      "modes": ["explanation", "feedback"],
+      "objective": "在不同关系与代价条件下独立提出有信息价值的问题。",
+      "criteria": ["不替他人猜测动机", "询问现实限制和行动代价", "解释问题将获得什么信息"]
+    }
+  }
+}

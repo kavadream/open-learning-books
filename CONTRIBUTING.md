@@ -2,6 +2,8 @@
 
 Open Learning Books welcomes software, teaching, content, design, translation, and evaluation contributions.
 
+For a step-by-step reader/creator tour and concrete teaching/code examples, see the [English walkthrough](docs/CONTRIBUTOR_WALKTHROUGH.en.md).
+
 ## First contribution
 
 1. Read README.md and docs/ROADMAP.md.
@@ -20,11 +22,13 @@ Node.js 22+ is sufficient. No API key is needed for the scripted demonstration.
 npm run dev
 npm run check
 npm test
+npm run eval:check
+npm run package:check
 ```
 
 ## Teaching and content proposals
 
-Describe the learner, concrete learning objective, source basis, example scenario, likely misunderstanding, proposed practice, and feedback criteria. Identify which statements are research findings, author interpretations, or original hypotheses. Mark invented scenarios clearly.
+Use the [canonical package and three-layer acceptance contract](docs/TEACHING_SPEC.md). Describe the learner, concrete learning objective, source basis and complete readable content. Add optional questions/practice, likely misunderstandings, boundary/counterexample cases and reasonable alternative responses when declaring those capabilities. Role-play is not mandatory. Identify which statements are research findings, author interpretations, or original hypotheses. Mark invented scenarios clearly.
 
 Avoid uploading another author's full book, private learner transcripts, or unreviewed claims of learning effectiveness. Contributions to sample content must explain the reuse permissions the contributor intends to grant; the software license does not automatically cover book content.
 

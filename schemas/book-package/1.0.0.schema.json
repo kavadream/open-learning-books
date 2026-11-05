@@ -1,0 +1,763 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:open-learning-books:book-package:1.0.0",
+  "title": "Open Learning Books book package 1.0.0",
+  "type": "object",
+  "required": [
+    "format",
+    "schemaVersion",
+    "book",
+    "learningObjectives",
+    "chapters",
+    "sources",
+    "media",
+    "exercises",
+    "evaluation"
+  ],
+  "properties": {
+    "format": {
+      "const": "open-learning-book"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "book": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "authors",
+        "rights",
+        "language",
+        "version",
+        "audience",
+        "prerequisites",
+        "scope",
+        "capabilityLevel",
+        "modalities"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/author"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "rights": {
+          "$ref": "#/$defs/rights"
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*$"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "audience": {
+          "$ref": "#/$defs/text"
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "scope": {
+          "enum": [
+            "complete-book",
+            "sample-chapter",
+            "learning-unit"
+          ]
+        },
+        "capabilityLevel": {
+          "$ref": "#/$defs/level"
+        },
+        "modalities": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "text",
+              "voice"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "learningObjectives": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/objective"
+      },
+      "minItems": 1,
+      "maxItems": 1000
+    },
+    "chapters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/chapter"
+      },
+      "minItems": 1,
+      "maxItems": 200
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      },
+      "minItems": 1,
+      "maxItems": 1000
+    },
+    "media": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/media"
+      },
+      "minItems": 0,
+      "maxItems": 1000
+    },
+    "teaching": {
+      "$ref": "#/$defs/teaching"
+    },
+    "exercises": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/exercise"
+      },
+      "minItems": 0,
+      "maxItems": 1000
+    },
+    "evaluation": {
+      "type": "object",
+      "required": [
+        "version",
+        "cases"
+      ],
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "cases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/case"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,79}$"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20000,
+      "pattern": "\\S"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[A-Za-z0-9.-]+)?$"
+    },
+    "level": {
+      "enum": [
+        "readable",
+        "question-answering",
+        "practice"
+      ]
+    },
+    "rights": {
+      "type": "object",
+      "required": [
+        "holder",
+        "licenseId",
+        "statement",
+        "allowedUses",
+        "restrictions",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "holder": {
+          "$ref": "#/$defs/text"
+        },
+        "licenseId": {
+          "$ref": "#/$defs/text"
+        },
+        "statement": {
+          "$ref": "#/$defs/text"
+        },
+        "allowedUses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "restrictions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "author": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "objective": {
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "observableEvidence"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "observableEvidence": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "locator",
+        "rightsStatement"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "original-example",
+            "reference",
+            "research",
+            "author-interpretation",
+            "hypothesis"
+          ]
+        },
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "rightsStatement": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "media": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "path",
+        "description",
+        "textAlternative",
+        "sourceIds",
+        "rightsStatement"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "image",
+            "audio",
+            "video"
+          ]
+        },
+        "path": {
+          "$ref": "#/$defs/text"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "textAlternative": {
+          "$ref": "#/$defs/text"
+        },
+        "sourceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "rightsStatement": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "format",
+        "text"
+      ],
+      "properties": {
+        "format": {
+          "const": "markdown"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000000,
+          "pattern": "\\S"
+        }
+      },
+      "additionalProperties": false
+    },
+    "unit": {
+      "type": "object",
+      "required": [
+        "id",
+        "order",
+        "title",
+        "capabilityLevel",
+        "body",
+        "objectiveIds",
+        "sourceIds",
+        "mediaIds"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "capabilityLevel": {
+          "$ref": "#/$defs/level"
+        },
+        "body": {
+          "$ref": "#/$defs/body"
+        },
+        "objectiveIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "sourceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "mediaIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "maxItems": 1000,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "chapter": {
+      "type": "object",
+      "required": [
+        "id",
+        "order",
+        "title",
+        "units"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "units": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/unit"
+          },
+          "minItems": 1,
+          "maxItems": 500
+        }
+      },
+      "additionalProperties": false
+    },
+    "role": {
+      "type": "object",
+      "required": [
+        "name",
+        "learnerRole",
+        "stableFacts",
+        "behavior"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "learnerRole": {
+          "$ref": "#/$defs/text"
+        },
+        "stableFacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "behavior": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "teachingUnit": {
+      "type": "object",
+      "required": [
+        "unitId",
+        "modes",
+        "knowledge",
+        "promptingStrategy",
+        "feedback",
+        "uncertaintyPolicy",
+        "completionCriteria",
+        "pausePolicy"
+      ],
+      "properties": {
+        "unitId": {
+          "$ref": "#/$defs/id"
+        },
+        "modes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "explanation",
+              "question-answering",
+              "role-play",
+              "feedback"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true
+        },
+        "knowledge": {
+          "type": "object",
+          "required": [
+            "sourceIds",
+            "scope",
+            "limits"
+          ],
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "minItems": 1,
+              "maxItems": 1000,
+              "uniqueItems": true
+            },
+            "scope": {
+              "$ref": "#/$defs/text"
+            },
+            "limits": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/text"
+              },
+              "minItems": 1,
+              "maxItems": 100,
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "promptingStrategy": {
+          "$ref": "#/$defs/text"
+        },
+        "feedback": {
+          "type": "object",
+          "required": [
+            "strategy",
+            "evidencePolicy",
+            "allowReasonableAlternatives",
+            "noPersonalityScores"
+          ],
+          "properties": {
+            "strategy": {
+              "$ref": "#/$defs/text"
+            },
+            "evidencePolicy": {
+              "const": "quote-learner-response"
+            },
+            "allowReasonableAlternatives": {
+              "const": true
+            },
+            "noPersonalityScores": {
+              "const": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "uncertaintyPolicy": {
+          "$ref": "#/$defs/text"
+        },
+        "completionCriteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "pausePolicy": {
+          "$ref": "#/$defs/text"
+        },
+        "role": {
+          "$ref": "#/$defs/role"
+        }
+      },
+      "additionalProperties": false
+    },
+    "teaching": {
+      "type": "object",
+      "required": [
+        "version",
+        "bookVersion",
+        "units"
+      ],
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "bookVersion": {
+          "$ref": "#/$defs/version"
+        },
+        "units": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/teachingUnit"
+          },
+          "minItems": 1,
+          "maxItems": 1000
+        }
+      },
+      "additionalProperties": false
+    },
+    "exercise": {
+      "type": "object",
+      "required": [
+        "id",
+        "unitId",
+        "kind",
+        "objectiveIds",
+        "prompt",
+        "criteria",
+        "reasonableAlternatives"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "unitId": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "concept-check",
+            "open-response",
+            "role-play",
+            "transfer"
+          ]
+        },
+        "objectiveIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "prompt": {
+          "$ref": "#/$defs/text"
+        },
+        "criteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "reasonableAlternatives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "case": {
+      "type": "object",
+      "required": [
+        "id",
+        "unitId",
+        "split",
+        "categories",
+        "scenario",
+        "task",
+        "checks",
+        "reasonableAlternatives",
+        "assistance"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "unitId": {
+          "$ref": "#/$defs/id"
+        },
+        "split": {
+          "enum": [
+            "development",
+            "comparison"
+          ]
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "unfamiliar",
+              "misconception",
+              "boundary",
+              "counterexample",
+              "independent-transfer",
+              "consistency"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true
+        },
+        "scenario": {
+          "$ref": "#/$defs/text"
+        },
+        "task": {
+          "$ref": "#/$defs/text"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "reasonableAlternatives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "assistance": {
+          "enum": [
+            "none",
+            "allowed"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

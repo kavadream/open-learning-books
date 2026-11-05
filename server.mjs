@@ -2,13 +2,18 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { resolve, extname, sep } from 'node:path';
-import { loadBooks, findUnit } from './lib/content.mjs';
+import { loadBooks, loadTeaching, findUnit } from './lib/content.mjs';
 import { validatePractice, scriptedPractice } from './lib/teaching.mjs';
+import { createProvider } from './lib/provider.mjs';
+import { createSessions } from './lib/sessions.mjs';
+import { failure } from './lib/errors.mjs';
+import { loadPackageSchemas } from './lib/book-package.mjs';
 
 const publicDir = resolve(fileURLToPath(new URL('./public/', import.meta.url)));
 const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml' };
 
-function send(res, code, body, type = 'application/json; charset=utf-8') {
+function sendResponse(res, code, body, type = 'application/json; charset=utf-8') {
+  if (res.destroyed || res.writableEnded) return;
   res.writeHead(code, {
     'Content-Type': type,
     'X-Content-Type-Options': 'nosniff',
@@ -23,22 +28,52 @@ async function readJson(req) {
   if (!req.headers['content-type']?.startsWith('application/json')) throw Object.assign(new Error('请使用 JSON 请求'), { status: 415 });
   let size = 0;
   const chunks = [];
-  for await (const chunk of req) {
+  for await (const chunk of req.iterator({ destroyOnReturn: false })) {
     size += chunk.length;
-    if (size > 16384) throw Object.assign(new Error('请求内容过长'), { status: 413 });
+    if (size > 16384) { req.resume(); throw Object.assign(new Error('请求内容过长'), { status: 413 }); }
     chunks.push(chunk);
   }
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); }
   catch { throw Object.assign(new Error('JSON 格式不正确'), { status: 400 }); }
 }
 
-export async function makeServer() {
+export async function makeServer({ provider = createProvider(), sessionSettings } = {}) {
   const books = await loadBooks();
-  return createServer(async (req, res) => {
+  const teaching = await loadTeaching();
+  const packageSchemas = await loadPackageSchemas();
+  const sessions = createSessions({ books, teaching, provider, settings: sessionSettings });
+  let closing = false;
+  function send(res, ...args) {
+    // A completed cancellation response must release its HTTP connection too.
+    if (closing && !res.headersSent) res.setHeader('Connection', 'close');
+    return sendResponse(res, ...args);
+  }
+  const server = createServer(async (req, res) => {
     try {
+      if (closing) throw failure('SERVER_SHUTDOWN', '服务正在关闭，当前输入请保留，稍后重新打开练习。', 503);
       const url = new URL(req.url, 'http://localhost');
-      if (req.method === 'GET' && url.pathname === '/api/status') return send(res, 200, { version: '0.1.0', mode: 'scripted-demo', externalAiEnabled: false, paymentsEnabled: false });
+      if (req.method === 'GET' && url.pathname === '/api/status') return send(res, 200, { version: '0.3.0-dev', mode: 'scripted-demo', externalAiEnabled: sessions.configured, realAiVerified: false, paymentsEnabled: false, teachingModes: ['explanation', 'role-play', 'feedback'] });
       if (req.method === 'GET' && url.pathname === '/api/books') return send(res, 200, { books });
+      if (req.method === 'GET' && url.pathname === '/api/package-schemas') return send(res, 200, packageSchemas);
+      if (['POST', 'DELETE'].includes(req.method) && url.pathname.startsWith('/api/')) {
+        if ((req.headers.origin && req.headers.origin !== `http://${req.headers.host}`) || req.headers['sec-fetch-site'] === 'cross-site') throw failure('ORIGIN_REJECTED', '请从本服务页面发起请求。', 403);
+      }
+      if (url.pathname.startsWith('/api/teaching/')) {
+        // This unauthenticated pilot must not spend through a public/rebound host.
+        if (!['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress) || !/^(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/.test(req.headers.host || '')) throw failure('LOCAL_ONLY', '教学会话仅支持本机访问，身份验证尚未实现。', 403);
+        if (req.method === 'POST' && url.pathname === '/api/teaching/sessions') return send(res, 201, sessions.create(await readJson(req)));
+        const match = url.pathname.match(/^\/api\/teaching\/sessions\/([a-f0-9-]{36})(\/turns)?$/);
+        if (match && req.method === 'DELETE' && !match[2]) return send(res, 200, sessions.cancel(match[1]));
+        if (match && req.method === 'POST' && match[2]) {
+          const input = await readJson(req);
+          const controller = new AbortController();
+          const abort = () => { if (!res.writableEnded) controller.abort(); };
+          res.once('close', abort);
+          try { return send(res, 200, await sessions.turn(match[1], input, controller.signal)); }
+          finally { res.off('close', abort); }
+        }
+        return send(res, 404, { error: '教学接口不存在', code: 'NOT_FOUND', retryable: false });
+      }
       if (req.method === 'POST' && url.pathname === '/api/practice') {
         const input = await readJson(req);
         const error = validatePractice(input);
@@ -61,9 +96,21 @@ export async function makeServer() {
         throw err;
       }
     } catch (err) {
-      send(res, err.status || 500, { error: err.status ? err.message : '服务暂时无法完成请求' });
+      if (err.status === 413) res.setHeader('Connection', 'close');
+      send(res, err.status || 500, { error: err.status ? err.message : '服务暂时无法完成请求', code: err.code || 'REQUEST_FAILED', retryable: Boolean(err.retryable) });
     }
   });
+  server.requestTimeout = 20000;
+  server.headersTimeout = 10000;
+  // 'close' is emitted only after active HTTP connections finish. Abort teaching
+  // BEFORE native close starts draining, otherwise the provider can keep it open.
+  const closeHttp = server.close.bind(server);
+  server.close = (...args) => {
+    if (!closing) { closing = true; sessions.close(); }
+    return closeHttp(...args);
+  };
+  server.on('close', () => sessions.close());
+  return server;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
@@ -73,5 +120,12 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
   const port = Number(option('--port') ?? process.env.PORT ?? 3000);
   const host = option('--host') ?? process.env.HOST ?? '127.0.0.1';
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('PORT must be an integer from 0 to 65535.');
-  server.listen(port, host, () => console.log(`Open Learning Books: http://${host}:${server.address().port}\nScripted demonstration; no external AI or payments.`));
+  const shutdown = () => server.close();
+  process.once('SIGINT', shutdown);
+  process.once('SIGTERM', shutdown);
+  server.once('close', () => {
+    process.off('SIGINT', shutdown);
+    process.off('SIGTERM', shutdown);
+  });
+  server.listen(port, host, () => console.log(`Open Learning Books: http://${host}:${server.address().port}\nDefault: scripted demo. AI requires explicit server configuration; no payments.`));
 }
