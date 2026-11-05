@@ -43,7 +43,7 @@ No calendar deadline or funding amount is committed by this roadmap. Each milest
 
 ## Cross-book conversion documentation
 
-- [x] Maintain the reusable [AI book conversion standard and templates](ai-book-standard/README.md) in this repository as 0.1.1-draft.
+- [x] Maintain the reusable [AI book conversion standard and templates](ai-book-standard/README.md) in this repository as 0.1.2-draft.
 - [ ] Apply the standard to each selected completed manuscript with its own profile, rights, versions, and acceptance evidence.
 - [ ] Validate each declared AI learning capability on the selected clients; document untested learning outcomes separately.
 

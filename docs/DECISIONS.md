@@ -21,3 +21,7 @@ The public repository is https://github.com/kavadream/open-learning-books . Repo
 ## 2026-11-05 Cross-book conversion standard
 
 The project owner requested that the reusable standard for converting completed books into AI books be maintained in this repository. [docs/ai-book-standard](ai-book-standard/README.md) is the canonical project source; Space is a synchronized reading copy. The first repository edition is 0.1.1-draft, not final approval of every proposed requirement. Each book keeps separate source content, rights, teaching configuration, versions, and acceptance evidence. This records a documentation and workflow decision, not automatic conversion or publication of other books.
+
+## 2026-11-05 Staged material access and grounded feedback
+
+Adopt the four scoped rules in standard0.1.2-draft: initial entry plus selected original only, practice material on learner choice, explicit web-versus-tool continuation, fact/inference-specific feedback, and bounded same-resource temporary retry with phase isolation. Security/policy refusals are not retried through alternate identities or channels. This is a documentation/pilot update, not a change to other books, the scripted reader, or verified AI/voice outcomes.

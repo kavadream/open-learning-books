@@ -8,7 +8,7 @@ Project inception: **2026-10-26** · Current version: **0.1.0 prototype**
 
 ## 书籍转化为 AI 书籍的通用规范
 
-[**主规范与转换流程**](docs/ai-book-standard/AI-BOOK-STANDARD.md)是本项目跨书复用的重要文件，当前为 **0.1.1-draft**。用于把10本或更多已完成书稿逐本增加 AI 学习入口与教学层，不默认重写原文。每本书独立管理配置、版权、版本及验收记录。
+[**主规范与转换流程**](docs/ai-book-standard/AI-BOOK-STANDARD.md)是本项目跨书复用的重要文件，当前为 **0.1.2-draft**。用于把10本或更多已完成书稿逐本增加 AI 学习入口与教学层，不默认重写原文。每本书独立管理配置、版权、版本及验收记录。
 
 从[规范目录](docs/ai-book-standard/README.md)取得单书适配、验收和多书转换清单模板。GitHub 是规范权威来源，Space 保留同内容阅读副本；规范归档不等于每条建议已经定稿，也不表示所有书已完成转换。
 
@@ -27,9 +27,10 @@ Project inception: **2026-10-26** · Current version: **0.1.0 prototype**
 
 本书直接与AI开始学习时，应先提供对应章完整正式原文，含作者分析、结论及来源说明；长文可按原顺序分段连续给出，不能把摘要、三单元演示或训练决策切片冒称全章。全文已提供也不代表读者确认读完或理解；用户可暂停、跳过或选择训练。
 
-正式入口为书籍仓库的[阅读与训练指南](https://github.com/kavadream/understanding-human-relations/blob/main/learning/README.md)。AI直接按用户指定展示章号读取，只有未指定才默认第一章；不先下载第一章、全书索引或原练习。已发现 `books_read_chapter` 时直接用 `{chapter:2,part:1}`，按返回的 next_request 真实续读；`part:"all"` 可取所选章全文一次。客户端未发现新工具时不伪造调用，仍可用既有 `books_get_unit` 指定所选 unit_id 与 `material:"chapter"`。无接口时按[完整源路由](https://github.com/kavadream/understanding-human-relations/blob/main/learning/reading.json)读取完整 Markdown。短块、HTTP或文字完整都不能证明实时语音逐字，口述应另行验收。
+正式读者入口为[KK Zambia Insights书籍页](https://insights.kenovainvestment.com/books/)，复制简短启动文字即可尝试；实际资料从[同域START](https://insights.kenovainvestment.com/books/human-relations/START.md)按阶段读取。最初只取入口和当前章完整原文，不先抓全书/练习/反馈规则。指定章直达，未指定才第一章。普通网页已取得全文时按自然段原顺序呈现；已连接工具则遵循真实next_request/cursor，二者不可混用。文字显示不等于实际语音读完或掌握。
 
-完整原文之后由读者选择[新编训练](https://github.com/kavadream/understanding-human-relations/blob/main/learning/index.json)。收到实质回答，AI先具体说明哪些判断有依据及其理由，及时纠正重要推断跳跃；追问须带来新理解，不能每轮机械提问。理由充分可小结并选择应用、[证据回顾](https://github.com/kavadream/understanding-human-relations/blob/main/learning/mastery-recap.json)或结束，不诊断人格或推定现实能力。详见[回应与停止规则](https://github.com/kavadream/understanding-human-relations/blob/main/learning/response-feedback.json)。私人回答和进度只留当前对话，不上传后端。
+读者明确选择练习后才取当前章练习与反馈规则，先具体回应实际答案中哪些是原文事实、哪些是合理推测、哪里需要修正；理解充分即可小结，不机械追加问题。有意义练习后按实际证据回顾，允许暂停或结束。临时文件错误只影响依赖它的阶段；按规则最多合法重试同一资源一次，安全/策略拒绝不伪装或换通道绕过。私人回答和进度仅留当前对话。教学源仍由书籍仓库的[指南](https://github.com/kavadream/understanding-human-relations/blob/main/learning/README.md)和[访问规则](https://github.com/kavadream/understanding-human-relations/blob/main/learning/access-policy.json)维护。
+
 
 下方What works today中的三单元、固定脚本角色演示属于历史原型，不是《理解人性》正式17章全书，也不是新试点阅读入口。本次仅修正此书入口说明，未替换原型阅读器或扩展其他书。
 
