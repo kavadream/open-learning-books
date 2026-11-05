@@ -40,3 +40,11 @@ Implement usage accounting, learning credits, transparent prices, payment handli
 Add voice where it improves the learning task, cross-book skills, translations, reusable teaching components, and community review. Expand based on observed usefulness and sustainable maintenance.
 
 No calendar deadline or funding amount is committed by this roadmap. Each milestone has a working experience and a validation question before the next scope expansion.
+
+## Cross-book conversion documentation
+
+- [x] Maintain the reusable [AI book conversion standard and templates](ai-book-standard/README.md) in this repository as 0.1.1-draft.
+- [ ] Apply the standard to each selected completed manuscript with its own profile, rights, versions, and acceptance evidence.
+- [ ] Validate each declared AI learning capability on the selected clients; document untested learning outcomes separately.
+
+The standard supports a queue of 10 or more books without assuming shared content, identical teaching modes, automatic synchronization, or approval to rewrite every book.

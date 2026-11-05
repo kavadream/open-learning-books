@@ -1,5 +1,7 @@
 # Book and teaching contract
 
+For conversion of completed manuscripts across multiple books, start with the [AI book conversion standard](ai-book-standard/README.md) (0.1.1-draft). That directory is the canonical cross-book workflow and includes independent book profiles, rights/version tracking, and acceptance templates. This document retains the original prototype contract; neither document claims an implemented automatic converter or verified learning outcomes.
+
 ## A book package
 
 A book should identify its schema version, ID, title, creator attribution, language, audience, publication state, learning goals, source basis, and chapters. A chapter contains ordered learning units. A unit can contain reading, a concept check, an open response, a scenario, and reflection.
