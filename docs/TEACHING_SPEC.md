@@ -1,6 +1,6 @@
 # Book and teaching contract
 
-For conversion of completed manuscripts across multiple books, start with the [AI book conversion standard](ai-book-standard/README.md) (0.1.2-draft). That directory is the canonical cross-book workflow and includes independent book profiles, rights/version tracking, and acceptance templates. This document retains the original prototype contract; neither document claims an implemented automatic converter or verified learning outcomes.
+For conversion of completed manuscripts across multiple books, start with the [AI book conversion standard](ai-book-standard/README.md) (0.1.3-draft). That directory is the canonical cross-book workflow and includes independent book profiles, rights/version tracking, and acceptance templates. This document retains the original prototype contract; neither document claims an implemented automatic converter or verified learning outcomes.
 
 ## A book package
 

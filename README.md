@@ -8,7 +8,7 @@ Project inception: **2026-10-26** · Current version: **0.1.0 prototype**
 
 ## 书籍转化为 AI 书籍的通用规范
 
-[**主规范与转换流程**](docs/ai-book-standard/AI-BOOK-STANDARD.md)是本项目跨书复用的重要文件，当前为 **0.1.2-draft**。用于把10本或更多已完成书稿逐本增加 AI 学习入口与教学层，不默认重写原文。每本书独立管理配置、版权、版本及验收记录。
+[**主规范与转换流程**](docs/ai-book-standard/AI-BOOK-STANDARD.md)是本项目跨书复用的重要文件，当前为 **0.1.3-draft**。用于把10本或更多已完成书稿逐本增加 AI 学习入口与教学层，不默认重写原文。每本书独立管理配置、版权、版本及验收记录。
 
 从[规范目录](docs/ai-book-standard/README.md)取得单书适配、验收和多书转换清单模板。GitHub 是规范权威来源，Space 保留同内容阅读副本；规范归档不等于每条建议已经定稿，也不表示所有书已完成转换。
 
